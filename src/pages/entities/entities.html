@@ -14,6 +14,13 @@
     (ionCancel)="onCancel($event)">
   </ion-searchbar>
   <ion-list>
-    <ion-item [innerHTML]=results></ion-item>
+    <ion-list>
+      <button
+        ion-item
+        *ngFor="let entity of entities">
+        <h2>{{ entity.entityName | uppercase }}</h2>
+        <p>{{ entity.entityCategory }}</p>
+      </button>
+    </ion-list>
   </ion-list>
 </ion-content>
