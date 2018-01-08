@@ -9,14 +9,14 @@
 <ion-content padding>
   <timeline endIcon="call">
     <timeline-item *ngFor="let item of items">
-      <timeline-time [time]="item.time"></timeline-time>
+      <timeline-time [time]="item.timestamp"></timeline-time>
       <ion-icon [name]="item.icon"></ion-icon>
       <ion-card>
         <ion-card-header>
-          {{item.title}}
+          {{item.eventCategory}}
         </ion-card-header>
         <ion-card-content>
-          {{item.content}}
+          {{item.message}}
         </ion-card-content>
       </ion-card>
     </timeline-item>

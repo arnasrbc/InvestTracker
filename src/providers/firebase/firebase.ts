@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import {AngularFireDatabase} from "angularfire2/database";
-import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
+import { IAlert } from '../../model/IAlert';
 
 /*
   Generated class for the FirebaseProvider provider.
@@ -12,9 +12,12 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class FirebaseProvider {
 
-  alerts: Observable<any[]>;
-  constructor(public afd: AngularFireDatabase, db: AngularFirestore) {
-    this.alerts = db.collection('alerts').valueChanges();
+  alertCollectionRef: AngularFirestoreCollection<IAlert>;
+  alerts: Observable<IAlert[]>;
+
+  constructor(public db: AngularFirestore) {
+    this.alertCollectionRef = db.collection<IAlert>('alerts');
+    this.alerts = this.alertCollectionRef.valueChanges();
   }
 
   getAlerts() {

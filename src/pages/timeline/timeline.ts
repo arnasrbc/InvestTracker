@@ -10,8 +10,8 @@ import { AngularFirestore } from 'angularfire2/firestore';
 })
 export class HomePage {
   items: any[] = [];
-  constructor(public navCtrl: NavController, public firebaseProvide: FirebaseProvider, public elasticSearch: ElasticsearchProvider) {
-    this.getItems();
+  constructor(public navCtrl: NavController, public firebaseProvide: FirebaseProvider) {
+   this.getItems();
   }
 
   getItems(){

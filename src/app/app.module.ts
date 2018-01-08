@@ -16,11 +16,11 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 
 import { HttpModule } from '@angular/http';
-import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireModule } from 'angularfire2';
 import { FirebaseProvider } from './../providers/firebase/firebase';
 import { ElasticsearchProvider } from '../providers/elasticsearch/elasticsearch';
 import { AngularFirestoreProvider } from 'angularfire2/firestore';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBt9o6Dr_8tlIm5HKUl_le4cfUT8eP0Cuw",
@@ -46,7 +46,7 @@ const firebaseConfig = {
   imports: [
     BrowserModule,
     HttpModule,
-    AngularFireDatabaseModule,
+    AngularFirestoreModule,
     AngularFireModule.initializeApp(firebaseConfig),
     IonicModule.forRoot(MyApp)
   ],
