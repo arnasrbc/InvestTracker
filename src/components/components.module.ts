@@ -1,11 +1,25 @@
-import { NgModule } from '@angular/core';
-import { TimelineFilterComponent } from './timeline-filter/timeline-filter';
-import { TimelineComponent } from './timeline/timeline';
+import {NgModule} from '@angular/core';
+import {TimelineFilterComponent} from './timeline-filter/timeline-filter';
+import {TimelineFilterModalComponent} from './timeline-filter-modal/timeline-filter-modal';
+import {IonicModule} from 'ionic-angular';
+
 @NgModule({
-	declarations: [TimelineFilterComponent,
-    TimelineComponent],
-	imports: [],
-	exports: [TimelineFilterComponent,
-    TimelineComponent]
+  declarations: [
+    TimelineComponent,
+    TimelineFilterComponent,
+    TimelineFilterModalComponent
+  ],
+  imports: [
+    IonicModule
+  ],
+  exports: [
+    TimelineComponent,
+    TimelineFilterComponent,
+    TimelineFilterModalComponent
+  ],
+  entryComponents: [
+    TimelineFilterModalComponent
+  ]
 })
-export class ComponentsModule {}
+export class ComponentsModule {
+}

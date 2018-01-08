@@ -6,7 +6,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { IAlert } from '../../model/IAlert';
 
 @Component({
-  selector: 'page-home',
+  selector: 'page-timeline',
   templateUrl: 'timeline.html'
 })
 export class HomePage {

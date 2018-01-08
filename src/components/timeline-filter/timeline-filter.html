@@ -1,4 +1,12 @@
-<!-- Generated template for the TimelineFilterComponent component -->
 <div>
-  {{text}}
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-searchbar [(ngModel)]="searchInput"></ion-searchbar>
+      </ion-col>
+      <ion-col>
+        <button ion-button (click)="presentFilterModal()"><ion-icon name="ios-funnel"></ion-icon></button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </div>

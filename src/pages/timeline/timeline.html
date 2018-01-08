@@ -7,6 +7,7 @@
 </ion-header>
 
 <ion-content padding>
+  <timeline-filter></timeline-filter>
   <timeline endIcon="aperture">
     <timeline-item *ngFor="let item of items">
       <timeline-time [time]="item.timestamp"></timeline-time>

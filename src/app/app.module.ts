@@ -22,6 +22,7 @@ import { ElasticsearchProvider } from '../providers/elasticsearch/elasticsearch'
 import { AngularFirestoreProvider } from 'angularfire2/firestore';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { IAlert } from '../model/IAlert';
+import {ComponentsModule} from "../components/components.module";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBt9o6Dr_8tlIm5HKUl_le4cfUT8eP0Cuw",
@@ -48,6 +49,7 @@ const firebaseConfig = {
     BrowserModule,
     HttpModule,
     AngularFirestoreModule,
+    ComponentsModule,
     AngularFireModule.initializeApp(firebaseConfig),
     IonicModule.forRoot(MyApp)
   ],

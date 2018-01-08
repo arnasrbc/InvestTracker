@@ -1,22 +1,22 @@
 import { Component } from '@angular/core';
+import {ModalController} from "ionic-angular";
+import {TimelineFilterModalComponent} from "../timeline-filter-modal/timeline-filter-modal";
 
-/**
- * Generated class for the TimelineFilterComponent component.
- *
- * See https://angular.io/api/core/Component for more info on Angular
- * Components.
- */
 @Component({
   selector: 'timeline-filter',
   templateUrl: 'timeline-filter.html'
 })
 export class TimelineFilterComponent {
 
-  text: string;
+  searchInput: string;
 
-  constructor() {
-    console.log('Hello TimelineFilterComponent Component');
-    this.text = 'Hello World';
+  constructor(private _modalCtrl: ModalController) {}
+
+  presentFilterModal() {
+    let filterModal = this._modalCtrl.create(TimelineFilterModalComponent, { test: 'test'});
+    filterModal.present();
   }
+
+
 
 }

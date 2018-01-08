@@ -4,7 +4,7 @@ import { ElasticsearchProvider } from "../../providers/elasticsearch/elasticsear
 import { Entity } from '../../models/entity';
 
 @Component({
-  selector: 'page-about',
+  selector: 'page-entities',
   templateUrl: 'entities.html'
 })
 export class AboutPage {
