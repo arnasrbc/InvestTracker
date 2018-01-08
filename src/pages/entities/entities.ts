@@ -11,4 +11,11 @@ export class AboutPage {
 
   }
 
+  onInput(){
+    console.log("onInput");
+  }
+
+  onCancel(){
+    console.log("onCancel");
+  }
 }
