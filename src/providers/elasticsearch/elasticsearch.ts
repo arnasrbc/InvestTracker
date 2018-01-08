@@ -14,4 +14,11 @@ export class ElasticsearchProvider {
     console.log('Elastic connected');
   }
 
+  fullTextSearch(_index, _queryText): any {
+    return this.client.search({
+      index: _index,
+      q: _queryText
+    });
+  }
+
 }
