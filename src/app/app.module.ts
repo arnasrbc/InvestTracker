@@ -7,6 +7,9 @@ import { AboutPage } from '../pages/entities/entities';
 import { ContactPage } from '../pages/configuration/configuration';
 import { HomePage } from '../pages/timeline/timeline';
 import { TabsPage } from '../pages/tabs/tabs';
+import { TimelineComponent } from '../components/timeline/timeline';
+import { TimelineTimeComponent } from '../components/timeline/timeline';
+import { TimelineItemComponent } from '../components/timeline/timeline';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -17,6 +20,7 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireModule } from 'angularfire2';
 import { FirebaseProvider } from './../providers/firebase/firebase';
 import { ElasticsearchProvider } from '../providers/elasticsearch/elasticsearch';
+import { AngularFirestoreProvider } from 'angularfire2/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBt9o6Dr_8tlIm5HKUl_le4cfUT8eP0Cuw",
@@ -34,7 +38,10 @@ const firebaseConfig = {
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage
+    TabsPage,
+    TimelineComponent,
+    TimelineItemComponent,
+    TimelineTimeComponent
   ],
   imports: [
     BrowserModule,
@@ -56,6 +63,7 @@ const firebaseConfig = {
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     FirebaseProvider,
+    AngularFirestoreProvider,
     ElasticsearchProvider
   ]
 })
