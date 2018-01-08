@@ -5,7 +5,7 @@ import {ElasticsearchProvider} from "../../providers/elasticsearch/elasticsearch
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html'
+  templateUrl: 'timeline.html'
 })
 export class HomePage {
 
