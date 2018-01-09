@@ -21,7 +21,7 @@ export class HomePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad tab1Page');
-    this.firebaseProvide.alertsByCategory$(this.navParams.data.entityCategory)
+    this.firebaseProvide.alertsByEntityId$(this.navParams.data.entityId)
       .subscribe(
       (alertWithIcon: IAlertWithIcon) => {
         console.log("adding items",alertWithIcon);
