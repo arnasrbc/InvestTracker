@@ -37,10 +37,20 @@ Main components
 -------------------------------- */
 .timelineText {
   color: black;
+  font-size: 16px;
+  font-size: 1.7rem !important;
+  margin-top: 0 !important;
+  margin-right: 5px !important;
 }
+
+.timelineTitle {
+  margin-right: 5px !important;
+}
+
 .timelineIcon {
-  font-size: 35px;
-  margin-left: 4px;
+  font-size: 28px;
+  margin-left: 7px;
+  margin-bottom: 5px !important;
   color: white;
 }
 .cd-author {
@@ -89,7 +99,7 @@ Main components
   border-color: #4a87ee;
   border-style: solid;
   border-width: 2px;
-  padding-top:5px;
+  padding-top:4px;
   background: white;
 }
 .cd-timeline-icon ion-icon {
@@ -152,6 +162,7 @@ Main components
   right: 100%;
   height: 0;
   width: 0;
+  margin-top: 10px;
   border: 7px solid transparent;
   border-right: 7px solid white;
   border-right-color: inherit;

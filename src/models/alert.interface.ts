@@ -14,6 +14,7 @@ export interface IAlertWithIcon {
   entityCategory: string;
   entityid: string;
   eventCategory: string;
+  title: string;
   message: string;
   timestamp: string;
   icon: string;

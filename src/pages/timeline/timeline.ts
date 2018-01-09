@@ -28,6 +28,15 @@ export class HomePage {
     }
   }
 
+  defineTitleByEventCategory(eventCategory : string){
+
+    var event = EVENT_CATEGORIES.find(i => i.code == eventCategory);
+    if (event)
+    {
+      return event.label;
+    }
+  }
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad tab1Page');
     this.refreshSubscription({entityOrEvent: this.filters, entityName: this.navParams.data.entity })
@@ -40,7 +49,8 @@ export class HomePage {
       .filter((alert: IAlert) => !filter.entityName || alert.entity === filter.entityName)
       .filter((alert: IAlert) => !filter.entityOrEvent ||
              filter.entityOrEvent.some( t => t === alert.entityCategory || t === alert.eventCategory))
-      .map(alert => Object.assign({}, alert, {icon : this.defineIconByEventCategory(alert.eventCategory)}))
+      .map(alert => Object.assign({}, alert, {icon : this.defineIconByEventCategory(alert.eventCategory), 
+        title : this.defineTitleByEventCategory(alert.eventCategory)}))
       .subscribe(
         (alertWithIcon: IAlertWithIcon) => {
           this.items.unshift(alertWithIcon);
