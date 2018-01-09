@@ -1,8 +1,10 @@
 import {Component} from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import {FirebaseProvider} from "../../providers/firebase/firebase";
-import {IAlertWithIcon} from '../../models/alert.interface';
+
 import {EVENT_CATEGORIES} from '../../models/event-category';
+import {IAlert, IAlertWithIcon} from '../../models/alert.interface';
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'page-timeline',
@@ -10,11 +12,12 @@ import {EVENT_CATEGORIES} from '../../models/event-category';
 })
 export class HomePage {
   items: IAlertWithIcon[] = [];
+  filters: string[];
+  subscription: Subscription;
 
   constructor(public navCtrl: NavController, public firebaseProvide: FirebaseProvider, public navParams: NavParams) {
-    this.listenAlertStream();
+    this.subscription = this.listenAlertStream();
   }
-
 
   defineIconByEventCategory(eventCategory : string){
 
@@ -27,16 +30,19 @@ export class HomePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad tab1Page');
-    this.firebaseProvide.alertsByCategory$(this.navParams.data.entityCategory);
-
+    this.refreshSubscription({entityOrEvent: this.filters, entityName: this.navParams.data.entity })
   }
 
-  listenAlertStream() {
+
+  listenAlertStream(filter?: {entityOrEvent?: string[], entityName?: string }): Subscription {
+    this.items = [];
     return this.firebaseProvide.alert$()
+      .filter((alert: IAlert) => !filter.entityName || alert.entity === filter.entityName)
+      .filter((alert: IAlert) => !filter.entityOrEvent ||
+             filter.entityOrEvent.some( t => t === alert.entityCategory || t === alert.eventCategory))
       .map(alert => Object.assign({}, alert, {icon : this.defineIconByEventCategory(alert.eventCategory)}))
       .subscribe(
         (alertWithIcon: IAlertWithIcon) => {
-          console.log(alertWithIcon);
           this.items.unshift(alertWithIcon);
         },
         error => {
@@ -46,4 +52,15 @@ export class HomePage {
       );
 
   }
+
+  updateFiltering($event: string[]) {
+    this.filters = $event;
+    this.refreshSubscription({entityOrEvent: $event});
+  }
+
+  refreshSubscription(filter:{entityOrEvent?: string[], entityName?: string }) {
+    this.subscription.unsubscribe();
+    this.subscription = this.listenAlertStream(filter);
+  }
+
 }

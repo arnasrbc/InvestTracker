@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {NavParams, ViewController} from "ionic-angular";
 import {FilterTypesProvider} from "../../providers/filter-types/filter-types";
 import 'rxjs/add/observable/forkJoin';
-import {Observable} from "rxjs/Observable";
+import {Observable} from "rxjs/Rx";
 
 /**
  * Generated class for the TimelineFilterModalComponent component.
@@ -26,11 +26,10 @@ export class TimelineFilterModalComponent implements OnInit{
   }
 
   ngOnInit() {
-
-    Observable.forkJoin([
+    Observable.forkJoin(
         this._filterTypesProvider.fetchAlertTypes(),
         this._filterTypesProvider.fetchEntityTypes()
-      ])
+      )
       .subscribe(
         res => {
           this.alertTypes = res[0];

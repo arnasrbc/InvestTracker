@@ -12,16 +12,14 @@ import "rxjs/add/observable/of";
 @Injectable()
 export class FilterTypesProvider {
 
-  constructor(private _firestore: FirebaseProvider) {
-
-  }
+  constructor(private _firestore: FirebaseProvider) {}
 
   fetchAlertTypes(): Observable<string[]> {
-    return Observable.of(['NewShareClass', 'AccountIsBlocked']);
+    return this._firestore.alertType$().map(type => type.val);
   }
 
   fetchEntityTypes(): Observable<string[]> {
-    return Observable.of(['LegalFund', 'ShareClass']);
+    return this._firestore.entityType$().map(type => type.val);
   }
 
 }

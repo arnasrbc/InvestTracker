@@ -9,6 +9,8 @@ import { IAlert } from '../../models/alert.interface';
   See https://angular.io/guide/dependency-injection for more info on providers
   and Angular DI.
 */
+type Type = {val: string[] }
+
 @Injectable()
 export class FirebaseProvider {
 
@@ -26,10 +28,21 @@ export class FirebaseProvider {
     return this.alertObservable;
   }
 
-  alertsByCategory$(category: string) {
-    return this.alertObservable
-      .filter(alert => alert.entityCategory === "share_class")
-      .map(alert => alert);
+  alertType$(): Observable<Type> {
+    return this.db
+               .collection<any>('types')
+               .doc<Type>('alerts')
+               .valueChanges()
+               .take(1);
+  }
+
+  entityType$(): Observable<Type> {
+    return this.db
+               .collection<any>('types')
+               .doc<Type>('entities')
+               .valueChanges()
+               .take(1)
+
   }
 
 }

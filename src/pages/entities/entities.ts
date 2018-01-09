@@ -16,8 +16,8 @@ export class AboutPage {
     this.entities = [];
   }
 
-  onClick(entityCategory){
-    this.navCtrl.push(HomePage, {entityCategory: entityCategory});
+  onClick(entityId){
+    this.navCtrl.push(HomePage, {entityId: entityId});
   }
 
   onInput(event){
