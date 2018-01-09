@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import {FirebaseProvider} from "../../providers/firebase/firebase";
 import {IAlertWithIcon} from '../../models/alert.interface';
+import {EVENT_CATEGORIES} from '../../models/event-category';
 
 @Component({
   selector: 'page-timeline',
@@ -15,9 +16,13 @@ export class HomePage {
   }
 
 
-  defineIconByEventCategory(){
-    
-    return 'add-circle';
+  defineIconByEventCategory(eventCategory : string){
+
+    var event = EVENT_CATEGORIES.find(i => i.code == eventCategory);
+    if (event)
+    {
+      return event.icon;
+    }
   }
 
   ionViewDidLoad() {
@@ -28,7 +33,7 @@ export class HomePage {
 
   listenAlertStream() {
     return this.firebaseProvide.alert$()
-      .map(alert => Object.assign({}, alert, {icon : this.defineIconByEventCategory()}))
+      .map(alert => Object.assign({}, alert, {icon : this.defineIconByEventCategory(alert.eventCategory)}))
       .subscribe(
         (alertWithIcon: IAlertWithIcon) => {
           console.log(alertWithIcon);
