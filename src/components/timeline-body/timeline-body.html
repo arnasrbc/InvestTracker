@@ -1,19 +1,16 @@
-<div class="timeline">
-  <timeline-item *ngFor="let item of items">
-    <timeline-time [time]="item.timestamp"></timeline-time>
-    <ion-icon [name]="item.icon"></ion-icon>
-    <ion-card>
-      <ion-card-header>
-        {{item.eventCategory}}
-      </ion-card-header>
-      <ion-card-content>
-        {{item.message}}
-      </ion-card-content>
-    </ion-card>
-  </timeline-item>
-
-  <timeline-item>
-    <ion-icon class="timelineEndIcon" [name]="endIcon"></ion-icon>
-  </timeline-item>
-
-</div>
+<section id="cd-timeline" class="cd-container">
+  <div *ngFor="let item of items">
+    <div class="cd-timeline-block">
+      <!-- CUSTOMIZE YOUR STYLE USING DEFAULT IONIC VALUES SUCH AS POSITIVE, CALM, BALANCED,... -->
+      <div class="cd-timeline-picture text-center royal">
+        <ion-icon name ="add-circle" class="timelineIcon"></ion-icon>
+      </div>
+      <!-- CUSTOMIZE YOUR STYLE USING DEFAULT IONIC VALUES SUCH AS POSITIVE, CALM, BALANCED,... -->
+      <div class="cd-timeline-content padding royal">
+        <h5 class="marginBottom0 marginTop0">{{item.eventCategory}}</h5>
+        <p class="marginTop5 cd-author">On {{item.timestamp | date: "dd/MM/yyyy"}} at {{item.timestamp | date: "hh:mm"}}</p>
+        <p class="timelineText">{{item.message}}</p>
+      </div>
+    </div>
+  </div>
+</section>
