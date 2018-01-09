@@ -28,12 +28,6 @@ export class FirebaseProvider {
     return this.alertObservable;
   }
 
-  alertsByEntityId$(entityId: string) {
-    return this.alertObservable
-      .filter(alert => alert.entityId === entityId)
-      .map(alert => alert);
-  }
-
   alertType$(): Observable<Type> {
     return this.db
                .collection<any>('types')
