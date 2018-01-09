@@ -25,7 +25,7 @@ export class TimelineItemComponent{
 
 @Component({
   selector:'timeline-time',
-  template: '<span>{{time}}</span>'
+  template: '<span>{{time | date: "dd/MM/yyyy"}}</span> <span>{{time | date: "hh:mm"}}</span>'
 })
 export class TimelineTimeComponent{
   @Input('time') time = {};

@@ -18,6 +18,7 @@ export class FirebaseProvider {
   constructor(public db: AngularFirestore) {
     this.alertCollectionRef = db.collection<IAlert>('alerts');
     this.alerts = this.alertCollectionRef.valueChanges();
+
   }
 
   getAlerts() {
