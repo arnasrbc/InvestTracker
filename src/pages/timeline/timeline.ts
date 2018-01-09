@@ -19,7 +19,7 @@ export class HomePage {
     this.firebaseProvide.alertsByCategory$(this.navParams.data.entityCategory)
       .subscribe(
       (alertWithIcon: IAlertWithIcon) => {
-        console.log("adding ites",alertWithIcon);
+        console.log("adding items",alertWithIcon);
         this.items.unshift(alertWithIcon);
       },
       error => {
