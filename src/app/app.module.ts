@@ -7,7 +7,7 @@ import {AboutPage} from '../pages/entities/entities';
 import {ContactPage} from '../pages/configuration/configuration';
 import {HomePage} from '../pages/timeline/timeline';
 import {TabsPage} from '../pages/tabs/tabs';
-import {TimelineComponent, TimelineItemComponent, TimelineTimeComponent} from '../components/timeline/timeline';
+import {TimelineBodyComponent, TimelineItemBodyComponent, TimelineTimeBodyComponent} from '../components/timeline-body/timeline-body';
 
 import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
@@ -38,9 +38,9 @@ const firebaseConfig = {
     ContactPage,
     HomePage,
     TabsPage,
-    TimelineComponent,
-    TimelineItemComponent,
-    TimelineTimeComponent
+    TimelineBodyComponent,
+    TimelineItemBodyComponent,
+    TimelineTimeBodyComponent
   ],
   imports: [
     BrowserModule,

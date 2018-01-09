@@ -1,0 +1,19 @@
+<div class="timeline">
+  <timeline-item *ngFor="let item of items">
+    <timeline-time [time]="item.timestamp"></timeline-time>
+    <ion-icon [name]="item.icon"></ion-icon>
+    <ion-card>
+      <ion-card-header>
+        {{item.eventCategory}}
+      </ion-card-header>
+      <ion-card-content>
+        {{item.message}}
+      </ion-card-content>
+    </ion-card>
+  </timeline-item>
+
+  <timeline-item>
+    <ion-icon class="timelineEndIcon" [name]="endIcon"></ion-icon>
+  </timeline-item>
+
+</div>

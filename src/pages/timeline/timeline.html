@@ -8,19 +8,5 @@
 
 <ion-content padding>
   <timeline-filter></timeline-filter>
-  <timeline endIcon="aperture">
-    <timeline-item *ngFor="let item of items">
-      <timeline-time [time]="item.timestamp"></timeline-time>
-      <ion-icon [name]="item.icon"></ion-icon>
-      <ion-card>
-        <ion-card-header>
-          {{item.eventCategory}}
-        </ion-card-header>
-        <ion-card-content>
-          {{item.message}}
-        </ion-card-content>
-      </ion-card>
-    </timeline-item>
-
-  </timeline>
+  <timeline endIcon="aperture" [items]="items"></timeline>
 </ion-content>

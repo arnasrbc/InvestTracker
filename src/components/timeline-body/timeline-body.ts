@@ -1,11 +1,13 @@
 import {Component, Input} from '@angular/core';
+import { IAlertWithIcon } from '../../models/alert.interface';
 
 @Component({
   selector: 'timeline',
-  templateUrl: 'timeline.html'
+  templateUrl: 'timeline-body.html'
 })
-export class TimelineComponent {
+export class TimelineBodyComponent {
   @Input('endIcon') endIcon = "ionic";
+  @Input('items') items : IAlertWithIcon[];
   constructor() {
 
   }
@@ -16,7 +18,7 @@ export class TimelineComponent {
   selector: 'timeline-item',
   template: '<ng-content></ng-content>'
 })
-export class TimelineItemComponent{
+export class TimelineItemBodyComponent{
   constructor(){
 
   }
@@ -27,7 +29,7 @@ export class TimelineItemComponent{
   selector:'timeline-time',
   template: '<span>{{time | date: "dd/MM/yyyy"}}</span> <span>{{time | date: "hh:mm"}}</span>'
 })
-export class TimelineTimeComponent{
+export class TimelineTimeBodyComponent{
   @Input('time') time = {};
   constructor(){
 
