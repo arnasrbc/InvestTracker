@@ -14,6 +14,11 @@ export class HomePage {
     this.listenAlertStream();
   }
 
+
+  defineIconByEventCategory(){
+    return 'add-circle';
+  }
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad tab1Page');
     this.firebaseProvide.alertsByCategory$(this.navParams.data.entityCategory)
@@ -31,7 +36,7 @@ export class HomePage {
 
   listenAlertStream() {
     return this.firebaseProvide.alert$()
-      .map(alert => Object.assign({}, alert, {icon: 'add-circle'}))
+      .map(alert => Object.assign({}, alert, {icon : this.defineIconByEventCategory()}))
       .subscribe(
         (alertWithIcon: IAlertWithIcon) => {
           console.log(alertWithIcon);
@@ -44,5 +49,4 @@ export class HomePage {
       );
 
   }
-
 }
