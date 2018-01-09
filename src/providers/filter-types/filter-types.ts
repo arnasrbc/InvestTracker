@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import {FirebaseProvider} from "../firebase/firebase";
+import "rxjs/add/observable/of";
 
 /*
   Generated class for the FilterTypesProvider provider.

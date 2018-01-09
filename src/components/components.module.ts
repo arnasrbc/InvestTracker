@@ -5,7 +5,6 @@ import {IonicModule} from 'ionic-angular';
 
 @NgModule({
   declarations: [
-    TimelineComponent,
     TimelineFilterComponent,
     TimelineFilterModalComponent
   ],
@@ -13,7 +12,6 @@ import {IonicModule} from 'ionic-angular';
     IonicModule
   ],
   exports: [
-    TimelineComponent,
     TimelineFilterComponent,
     TimelineFilterModalComponent
   ],
