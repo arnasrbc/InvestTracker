@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { ElasticsearchProvider } from "../../providers/elasticsearch/elasticsearch";
 import { Entity } from '../../models/entity';
+import { HomePage } from '../timeline/timeline';
 
 @Component({
   selector: 'page-entities',
@@ -13,6 +14,10 @@ export class AboutPage {
 
   constructor(public navCtrl: NavController, public elasticsearch: ElasticsearchProvider) {
     this.entities = [];
+  }
+
+  onClick(entityCategory){
+    this.navCtrl.push(HomePage, {entityCategory: entityCategory});
   }
 
   onInput(event){
