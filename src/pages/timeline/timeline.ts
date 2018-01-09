@@ -14,9 +14,14 @@ export class HomePage {
     this.listenAlertStream();
   }
 
+  defineIconByEventCategory(){
+    
+    return 'add-circle';
+  }
+
   listenAlertStream() {
     return this.firebaseProvide.alert$()
-      .map(alert => Object.assign({}, alert, {icon: 'add-circle'}))
+      .map(alert => Object.assign({}, alert, {icon : this.defineIconByEventCategory()}))
       .subscribe(
         (alertWithIcon: IAlertWithIcon) => {
           console.log(alertWithIcon);
@@ -29,5 +34,4 @@ export class HomePage {
       );
 
   }
-
 }
