@@ -23,6 +23,7 @@ import { AngularFirestoreProvider } from 'angularfire2/firestore';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { IAlert } from '../model/IAlert';
 import {ComponentsModule} from "../components/components.module";
+import { FilterTypesProvider } from '../providers/filter-types/filter-types';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBt9o6Dr_8tlIm5HKUl_le4cfUT8eP0Cuw",
@@ -67,7 +68,8 @@ const firebaseConfig = {
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     FirebaseProvider,
     AngularFirestoreProvider,
-    ElasticsearchProvider
+    ElasticsearchProvider,
+    FilterTypesProvider
   ]
 })
 export class AppModule {}

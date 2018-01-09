@@ -9,14 +9,15 @@ import {TimelineFilterModalComponent} from "../timeline-filter-modal/timeline-fi
 export class TimelineFilterComponent {
 
   searchInput: string;
+  filters: string[];
 
   constructor(private _modalCtrl: ModalController) {}
 
   presentFilterModal() {
-    let filterModal = this._modalCtrl.create(TimelineFilterModalComponent, { test: 'test'});
+    let filterModal = this._modalCtrl.create(TimelineFilterModalComponent, { filter: this.filters});
+    filterModal.onDidDismiss( (data: { filter: string[] }) => this.filters = data.filter);
     filterModal.present();
   }
-
 
 
 }
