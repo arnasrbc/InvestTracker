@@ -1,32 +1,33 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import {Component} from '@angular/core';
+import {NavController} from 'ionic-angular';
 import {FirebaseProvider} from "../../providers/firebase/firebase";
-import {ElasticsearchProvider} from "../../providers/elasticsearch/elasticsearch";
-import { AngularFirestore } from 'angularfire2/firestore';
-import { IAlert } from '../../model/IAlert';
+import {IAlertWithIcon} from '../../models/alert.interface';
 
 @Component({
   selector: 'page-timeline',
   templateUrl: 'timeline.html'
 })
 export class HomePage {
-  items: IAlert[] = [];
+  items: IAlertWithIcon[] = [];
+
   constructor(public navCtrl: NavController, public firebaseProvide: FirebaseProvider) {
-   this.getItems();
+    this.listenAlertStream();
   }
 
-  getItems(){
-    return this.firebaseProvide.getAlerts().subscribe(
-      list => {
-        console.log(list);
-        this.items = list;
-      },
-      error => {
-        console.error(error);
-      }, 
-      () => console.log()
-    );
-    
+  listenAlertStream() {
+    return this.firebaseProvide.alert$()
+      .map(alert => Object.assign({}, alert, {icon: 'add-circle'}))
+      .subscribe(
+        (alertWithIcon: IAlertWithIcon) => {
+          console.log(alertWithIcon);
+          this.items.unshift(alertWithIcon);
+        },
+        error => {
+          console.error(error);
+        },
+        () => console.log('completed')
+      );
+
   }
 
 }
