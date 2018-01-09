@@ -26,5 +26,10 @@ export class FirebaseProvider {
     return this.alertObservable;
   }
 
+  alertsByCategory$(public category: string) {
+    return this.alertObservable
+      .filter(alert => alert.entityCategory === "share_class")
+      .map(alert => alert);
+  }
 
 }
