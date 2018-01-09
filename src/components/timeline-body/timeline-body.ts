@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core';
 import { IAlertWithIcon } from '../../models/alert.interface';
 
 @Component({
-  selector: 'timeline',
+  selector: 'timeline-body',
   templateUrl: 'timeline-body.html'
 })
 export class TimelineBodyComponent {
