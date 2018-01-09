@@ -16,7 +16,17 @@ export class HomePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad tab1Page');
-    this.firebaseProvide.alertsByCategory$(this.navParams.data.entityCategory);
+    this.firebaseProvide.alertsByCategory$(this.navParams.data.entityCategory)
+      .subscribe(
+      (alertWithIcon: IAlertWithIcon) => {
+        console.log("adding ites",alertWithIcon);
+        this.items.unshift(alertWithIcon);
+      },
+      error => {
+        console.error(error);
+      },
+      () => console.log('completed')
+    );
   }
 
   listenAlertStream() {
