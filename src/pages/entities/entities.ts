@@ -18,6 +18,7 @@ export class AboutPage {
   onInput(event){
     this.elasticsearch.fullTextSearch('tracker', '*' + event.target.value + '*').then(
       (response) => {
+        this.entities = [];
         for (let result of response.hits.hits) {
           const entity = result._source;
           this.entities.push(new Entity(entity.entity, entity.entity_name, entity.entity_category))
