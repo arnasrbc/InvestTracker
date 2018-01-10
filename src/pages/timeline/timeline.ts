@@ -5,6 +5,7 @@ import {FirebaseProvider} from "../../providers/firebase/firebase";
 import {EVENT_CATEGORIES} from '../../models/event-category';
 import {IAlert, IAlertWithIcon} from '../../models/alert.interface';
 import {Subscription} from "rxjs/Subscription";
+import {TimelineFilter} from "../../models/timeline-filter";
 
 @Component({
   selector: 'page-timeline',
@@ -15,13 +16,13 @@ export class HomePage {
   filters: string[];
   subscription: Subscription;
 
-  constructor(public navCtrl: NavController, public firebaseProvide: FirebaseProvider, public navParams: NavParams) {
-    this.subscription = this.listenAlertStream();
+  constructor(public navCtrl: NavController, public firebaseProvider: FirebaseProvider, public navParams: NavParams) {
+    //this.subscription = this.listenAlertStream();
   }
 
   defineIconByEventCategory(eventCategory : string){
 
-    var event = EVENT_CATEGORIES.find(i => i.code == eventCategory);
+    const event = EVENT_CATEGORIES.find(i => i.code == eventCategory);
     if (event)
     {
       return event.icon;
@@ -30,7 +31,7 @@ export class HomePage {
 
   defineTitleByEventCategory(eventCategory : string){
 
-    var event = EVENT_CATEGORIES.find(i => i.code == eventCategory);
+    const event = EVENT_CATEGORIES.find(i => i.code == eventCategory);
     if (event)
     {
       return event.label;
@@ -38,38 +39,42 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad tab1Page');
-    this.refreshSubscription({entityOrEvent: this.filters, entityId: this.navParams.data.entityId })
+    console.log('ionViewDidLoad tab1Page', this.navParams);
+    this.refreshSubscription({ entityCategories: this.filters,
+      entityId: this.navParams.data.entityId
+    });
   }
 
 
-  listenAlertStream(filter?: {entityOrEvent?: string[], entityId?: string }): Subscription {
+  listenAlertStream(filter?: TimelineFilter): Subscription {
     this.items = [];
-    return this.firebaseProvide.alert$()
-      .filter((alert: IAlert) => !filter.entityId || alert.entityid === filter.entityId)
-      .filter((alert: IAlert) => !filter.entityOrEvent ||
-             filter.entityOrEvent.some( t => t === alert.entityCategory || t === alert.eventCategory))
-      .map(alert => Object.assign({}, alert, {icon : this.defineIconByEventCategory(alert.eventCategory),
-        title : this.defineTitleByEventCategory(alert.eventCategory)}))
+    console.log(filter);
+    return this.firebaseProvider.alert$()
+      .filter((alert: IAlert) => !filter.entityId || alert.entityId === filter.entityId)
+      .do( (alert:IAlert )=> console.log('2', alert.entityId))
+      // todo @Florian change condition .filter((alert: IAlert) => !filter.entityCategories || filter.entityCategories.some( t => t === alert.entityCategory))
+      // todo @Florian change condition .filter((alert: IAlert) => !filter.eventCategories || filter.eventCategories.some( t => t === alert.eventCategory))
+      .map(alert => {
+        return Object.assign({},
+          alert,
+          {
+            icon: this.defineIconByEventCategory(alert.eventCategory),
+            title: this.defineTitleByEventCategory(alert.eventCategory)
+          });
+      })
       .subscribe(
-        (alertWithIcon: IAlertWithIcon) => {
-          this.items.unshift(alertWithIcon);
-        },
-        error => {
-          console.error(error);
-        },
-        () => console.log('completed')
-      );
-
+        (alertWithIcon: IAlertWithIcon) =>  this.items.unshift(alertWithIcon),
+        error => console.error(error),
+        () => console.log('completed'));
   }
 
-  updateFiltering($event: string[]) {
+  onFilterChange($event: string[]) {
     this.filters = $event;
-    this.refreshSubscription({entityOrEvent: $event});
+    this.refreshSubscription({ entityCategories: $event } );
   }
 
-  refreshSubscription(filter:{entityOrEvent?: string[], entityId?: string }) {
-    this.subscription.unsubscribe();
+  refreshSubscription(filter: TimelineFilter) {
+    if (this.subscription) { this.subscription.unsubscribe(); }
     this.subscription = this.listenAlertStream(filter);
   }
 

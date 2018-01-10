@@ -1,5 +1,6 @@
-interface TimelineFilter {
-
-  alerts: string[];
-  entities: string[];
+export interface TimelineFilter {
+  entityCategories?: string[];
+  eventCategories?: string[];
+  searchInput?: string;
+  entityId?: string;
 }

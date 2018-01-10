@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
-import { Observable } from 'rxjs/Rx';
-import { IAlert } from '../../models/alert.interface';
+import {Injectable} from '@angular/core';
+import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
+import {Observable} from 'rxjs/Rx';
 
 /*
   Generated class for the FirebaseProvider provider.
@@ -9,40 +8,29 @@ import { IAlert } from '../../models/alert.interface';
   See https://angular.io/guide/dependency-injection for more info on providers
   and Angular DI.
 */
-type Type = {val: string[] }
 
 @Injectable()
 export class FirebaseProvider {
 
-  alertCollectionRef: AngularFirestoreCollection<IAlert>;
-  alertObservable: Observable<IAlert>;
+  alertCollectionRef: AngularFirestoreCollection<any>;
 
   constructor(public db: AngularFirestore) {
-    this.alertCollectionRef = db.collection<IAlert>('alerts');
-    this.alertObservable =
-      this.alertCollectionRef.valueChanges()
-        .flatMap(arr => Observable.from(arr));
+    this.alertCollectionRef = db.collection('alerts');
   }
 
   alert$() {
-    return this.alertObservable;
+    return this.alertCollectionRef.valueChanges()
+      .flatMap(arr => Observable.from(arr))
+      .map( (firebaseAlert:any) => {
+        return {
+          id: firebaseAlert.id,
+          entityName: firebaseAlert.entity_name,
+          entityCategory: firebaseAlert.entity_category,
+          entityId: firebaseAlert.entity_id,
+          eventCategory: firebaseAlert.event_category,
+          message: firebaseAlert.message,
+          timestamp: firebaseAlert.timestamp
+        }
+      });
   }
-
-  alertType$(): Observable<Type> {
-    return this.db
-               .collection<any>('types')
-               .doc<Type>('alerts')
-               .valueChanges()
-               .take(1);
-  }
-
-  entityType$(): Observable<Type> {
-    return this.db
-               .collection<any>('types')
-               .doc<Type>('entities')
-               .valueChanges()
-               .take(1)
-
-  }
-
 }

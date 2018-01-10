@@ -1,8 +1,8 @@
 export interface IAlert {
     id?: string;
-    entity: string;
+    entityName: string;
     entityCategory: string;
-    entityid: string;
+    entityId: string;
     eventCategory: string;
     message: string;
     timestamp: string;
@@ -10,9 +10,9 @@ export interface IAlert {
 
 export interface IAlertWithIcon {
   id?: string;
-  entity: string;
+  entityName: string;
   entityCategory: string;
-  entityid: string;
+  entityId: string;
   eventCategory: string;
   title: string;
   message: string;

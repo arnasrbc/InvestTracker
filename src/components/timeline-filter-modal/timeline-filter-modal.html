@@ -19,14 +19,14 @@
     <ion-list>
       <ion-item *ngFor="let entityType of entityTypes">
         <ion-label>{{ entityType }}</ion-label>
-        <ion-toggle [(ngModel)]="filterModel[entityType]"></ion-toggle>
+        <ion-toggle [(ngModel)]="filterModel.entity[entityType]"></ion-toggle>
       </ion-item>
     </ion-list>
   <!-- Alert types -->
   <ion-list>
     <ion-item *ngFor="let alertType of alertTypes">
       <ion-label>{{ alertType }}</ion-label>
-      <ion-toggle [(ngModel)]="filterModel[alertType]"></ion-toggle>
+      <ion-toggle [(ngModel)]="filterModel.alert[alertType]"></ion-toggle>
     </ion-item>
   </ion-list>
 </ion-content>

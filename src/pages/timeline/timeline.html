@@ -7,6 +7,6 @@
 </ion-header>
 
 <ion-content padding>
-  <timeline-filter (filterChange)="updateFiltering($event)"></timeline-filter>
+  <timeline-filter (filterChange)="onFilterChange($event)"></timeline-filter>
   <timeline-body [items]="items"></timeline-body>
 </ion-content>

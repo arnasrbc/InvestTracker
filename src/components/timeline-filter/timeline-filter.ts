@@ -9,19 +9,19 @@ import {TimelineFilterModalComponent} from "../timeline-filter-modal/timeline-fi
 export class TimelineFilterComponent {
 
   searchInput: string;
-  filters: string[] = [];
+  internalFilter: any;
   @Output()
-  filterChange: EventEmitter<string[]>;
+  filterChange: EventEmitter<any>;
 
   constructor(private _modalCtrl: ModalController) {
     this.filterChange = new EventEmitter();
   }
 
   presentFilterModal() {
-    let filterModal = this._modalCtrl.create(TimelineFilterModalComponent, { filter: this.filters});
-    filterModal.onDidDismiss( (data: { filter: string[] }) => {
-      this.filters = data.filter;
-      this.filterChange.emit(this.filters);
+    let filterModal = this._modalCtrl.create(TimelineFilterModalComponent, { filter: this.internalFilter});
+    filterModal.onDidDismiss( (data: { filter: any }) => {
+      this.internalFilter = data.filter;
+      this.filterChange.emit(this.internalFilter);
     });
     filterModal.present();
   }

@@ -3,6 +3,7 @@ import {NavParams, ViewController} from "ionic-angular";
 import {FilterTypesProvider} from "../../providers/filter-types/filter-types";
 import 'rxjs/add/observable/forkJoin';
 import {Observable} from "rxjs/Rx";
+import {TimelineFilter} from "../../models/timeline-filter";
 
 /**
  * Generated class for the TimelineFilterModalComponent component.
@@ -14,15 +15,15 @@ import {Observable} from "rxjs/Rx";
   selector: 'timeline-filter-modal',
   templateUrl: 'timeline-filter-modal.html'
 })
-export class TimelineFilterModalComponent implements OnInit{
+export class TimelineFilterModalComponent implements OnInit {
 
-  filterModel: any = {};
-  toApplyFilterArray: string[];
+  filterModel: any = { entity: {}, alert: {} };
+  toApplyFilterArray: { entityCategories: string[], eventCategories: string[] };
   entityTypes: string[];
   alertTypes: string[];
 
   constructor(private _viewCtrl: ViewController, _params: NavParams, private _filterTypesProvider: FilterTypesProvider) {
-    this.toApplyFilterArray = _params.get('filter') || [];
+    this.toApplyFilterArray = _params.get('filter') || { entityCategories: [], eventCategories: [] };
   }
 
   ngOnInit() {
@@ -40,8 +41,10 @@ export class TimelineFilterModalComponent implements OnInit{
   }
 
   confirm() {
-    this.toApplyFilterArray = Object.keys(this.filterModel)
-      .filter(key => this.filterModel[key]);
+    this.toApplyFilterArray = {
+     entityCategories: Object.keys(this.filterModel.entity).filter(key => this.filterModel.entity[key]),
+      eventCategories: Object.keys(this.filterModel.alert).filter(key => this.filterModel.alert[key])
+    };
     this._viewCtrl.dismiss({filter: this.toApplyFilterArray });
   }
 
@@ -49,8 +52,8 @@ export class TimelineFilterModalComponent implements OnInit{
     this._viewCtrl.dismiss({filter: this.toApplyFilterArray });
   }
 
-  private buildFromPreviousFilter(filter: string[]) {
-    let arr: string[] = [].concat(this.entityTypes, this.alertTypes);
-    arr.forEach( val => this.filterModel[val] = filter.indexOf(val) > -1);
+  private buildFromPreviousFilter(filter: { entityCategories: string[], eventCategories: string[] }) {
+    this.entityTypes.forEach( v => this.filterModel.entity[v] = filter.entityCategories.indexOf(v) > -1);
+    this.alertTypes.forEach( v => this.filterModel.alert[v] = filter.eventCategories.indexOf(v) > -1);
   }
 }

@@ -26,8 +26,8 @@ export class AboutPage {
         this.entities = [];
         for (let result of response.hits.hits) {
           const entity = result._source;
-          this.entities.push(new Entity(entity.entity, entity.entity_name, entity.entity_category))
-          console.log(result._source.entity);
+          this.entities.push(new Entity(entity.entity_id, entity.entity_name, entity.entity_category))
+          console.log(result._source.entity_id);
         }
       }, error => {
         console.error(error);

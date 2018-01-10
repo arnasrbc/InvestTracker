@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/Observable";
-import {FirebaseProvider} from "../firebase/firebase";
 import "rxjs/add/observable/of";
+import {EVENT_CATEGORIES} from "../../models/event-category";
 
 /*
   Generated class for the FilterTypesProvider provider.
@@ -12,14 +12,14 @@ import "rxjs/add/observable/of";
 @Injectable()
 export class FilterTypesProvider {
 
-  constructor(private _firestore: FirebaseProvider) {}
+  constructor() {}
 
   fetchAlertTypes(): Observable<string[]> {
-    return this._firestore.alertType$().map(type => type.val);
+    return Observable.of(EVENT_CATEGORIES.map( c => c.code ));
   }
 
   fetchEntityTypes(): Observable<string[]> {
-    return this._firestore.entityType$().map(type => type.val);
+    return Observable.of(['share_class', 'account', 'legal_fund', 'investor', 'dealer', 'holding', 'trade']);
   }
 
 }
