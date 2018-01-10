@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import "rxjs/add/observable/of";
 import {EVENT_CATEGORIES} from "../../models/event-category";
+import {DisplayItem} from "../../models/display-item";
+import {ENTITIES_CATEGORIES} from "../../models/entities-category";
 
 /*
   Generated class for the FilterTypesProvider provider.
@@ -12,14 +14,20 @@ import {EVENT_CATEGORIES} from "../../models/event-category";
 @Injectable()
 export class FilterTypesProvider {
 
-  constructor() {}
-
-  fetchAlertTypes(): Observable<string[]> {
-    return Observable.of(EVENT_CATEGORIES.map( c => c.code ));
+  constructor() {
   }
 
-  fetchEntityTypes(): Observable<string[]> {
-    return Observable.of(['share_class', 'account', 'legal_fund', 'investor', 'dealer', 'holding', 'trade']);
+  fetchAlertTypes(): Observable<DisplayItem[]> {
+    return Observable.of(EVENT_CATEGORIES.map(c => {
+      return {
+       label: c.label,
+       code: c.code
+    };
+    }));
+  }
+
+  fetchEntityTypes(): Observable<DisplayItem[]> {
+    return Observable.of(ENTITIES_CATEGORIES);
   }
 
 }
