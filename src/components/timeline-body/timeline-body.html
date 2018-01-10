@@ -8,14 +8,14 @@
       <!-- CUSTOMIZE YOUR STYLE USING DEFAULT IONIC VALUES SUCH AS POSITIVE, CALM, BALANCED,... -->
       <div class="cd-timeline-content padding {{item.entityCategory}}">
         <ion-row>
-          <ion-col>
+          <ion-col col-5>
             <h5 margin-left class="marginBottom0 marginTop5 timelineTitle">{{item.title}}</h5>
             <p margin-left class="marginTop5 cd-author">On {{item.timestamp | date: "dd/MM/yyyy"}} at {{item.timestamp | date: "hh:mm"}}</p>
           </ion-col>
-          <ion-col>
-            <h5 margin-left class="marginTop5 cd-author">{{item.entityCategory}}</h5>
+          <ion-col col-5>
+            <h5 margin-left class="marginTop5 cd-author">#{{item.entityCategory}}</h5>
           </ion-col>
-          <ion-col>
+          <ion-col col-2>
             <ion-icon (click)="toggleDetails(item)" style="float: right;padding: 10px;" class="icon-flipped" name="more"></ion-icon>
           </ion-col>
         </ion-row>
