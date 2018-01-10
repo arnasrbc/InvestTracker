@@ -39,14 +39,14 @@ export class HomePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad tab1Page');
-    this.refreshSubscription({entityOrEvent: this.filters, entityName: this.navParams.data.entityId })
+    this.refreshSubscription({entityOrEvent: this.filters, entityId: this.navParams.data.entityId })
   }
 
 
-  listenAlertStream(filter?: {entityOrEvent?: string[], entityName?: string }): Subscription {
+  listenAlertStream(filter?: {entityOrEvent?: string[], entityId?: string }): Subscription {
     this.items = [];
     return this.firebaseProvide.alert$()
-      .filter((alert: IAlert) => !filter.entityName || alert.entity === filter.entityName)
+      .filter((alert: IAlert) => !filter.entityId || alert.entityid === filter.entityId)
       .filter((alert: IAlert) => !filter.entityOrEvent ||
              filter.entityOrEvent.some( t => t === alert.entityCategory || t === alert.eventCategory))
       .map(alert => Object.assign({}, alert, {icon : this.defineIconByEventCategory(alert.eventCategory),
@@ -68,7 +68,7 @@ export class HomePage {
     this.refreshSubscription({entityOrEvent: $event});
   }
 
-  refreshSubscription(filter:{entityOrEvent?: string[], entityName?: string }) {
+  refreshSubscription(filter:{entityOrEvent?: string[], entityId?: string }) {
     this.subscription.unsubscribe();
     this.subscription = this.listenAlertStream(filter);
   }
