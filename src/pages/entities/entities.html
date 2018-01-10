@@ -11,10 +11,12 @@
     [(ngModel)]="myInput"
     [showCancelButton]="shouldShowCancel"
     (ionInput)="onInput($event)"
-    (ionCancel)="onCancel($event)">
+    (ionCancel)="onCancel($event)"
+    placeholder="Type search query to get entity list"
+  >
   </ion-searchbar>
-  <ion-list>
     <ion-list>
+      <ion-label *ngIf="entities.length !== 0">{{entities.length}} results found for query '{{myInput}}'</ion-label>
       <button
         ion-item
         *ngFor="let entity of entities"
@@ -23,5 +25,4 @@
         <p>{{ entity.entityCategory }}</p>
       </button>
     </ion-list>
-  </ion-list>
 </ion-content>
