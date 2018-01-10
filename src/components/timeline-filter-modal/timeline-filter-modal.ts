@@ -3,7 +3,6 @@ import {NavParams, ViewController} from "ionic-angular";
 import {FilterTypesProvider} from "../../providers/filter-types/filter-types";
 import 'rxjs/add/observable/forkJoin';
 import {Observable} from "rxjs/Rx";
-import {TimelineFilter} from "../../models/timeline-filter";
 import {arrayAsCodes, DisplayItem} from "../../models/display-item";
 
 /**

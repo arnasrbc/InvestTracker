@@ -17,7 +17,6 @@ export class HomePage {
   subscription: Subscription;
 
   constructor(public navCtrl: NavController, public firebaseProvider: FirebaseProvider, public navParams: NavParams) {
-    //this.subscription = this.listenAlertStream();
   }
 
   defineIconByEventCategory(eventCategory : string){
@@ -48,9 +47,10 @@ export class HomePage {
     this.items = [];
     console.log(filter);
     return this.firebaseProvider.alert$()
-      .filter((alert: IAlert) => !filter.entityId || alert.entityId === filter.entityId)
-      .filter((alert: IAlert) => !filter.entityCategories || filter.entityCategories.some( t => t === alert.entityCategory))
-      .filter((alert: IAlert) => !filter.eventCategories || filter.eventCategories.some( t => t === alert.eventCategory))
+      .filter((alert: IAlert) =>  !filter.entityId || alert.entityId === filter.entityId)
+      .filter((alert: IAlert) =>  !filter.entityCategories || filter.entityCategories.some( t => t === alert.entityCategory))
+      .filter((alert: IAlert) =>  !filter.eventCategories || filter.eventCategories.some( t => t === alert.eventCategory))
+      .filter( (alert: IAlert) => !filter.searchInput || this.alertContains(alert, filter.searchInput))
       .map(alert => {
         return Object.assign({},
           alert,
@@ -75,4 +75,10 @@ export class HomePage {
     this.subscription = this.listenAlertStream(filter);
   }
 
+  private alertContains(alert: IAlert, searchInput: string): boolean {
+    return Object.keys(alert)
+      .map(key => alert[key])
+      .reduce( (acc, cur) => acc + cur, "")
+      .indexOf(searchInput) > -1;
+  }
 }
