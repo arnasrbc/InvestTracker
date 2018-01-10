@@ -13,14 +13,13 @@ import {TimelineFilter} from "../../models/timeline-filter";
 })
 export class HomePage {
   items: IAlertWithIcon[] = [];
-  filters: string[];
+  filters: any;
   subscription: Subscription;
   alertsPerPage: number = 5;
   lastIndexAlertPerpage: number =0;
   displayItems: IAlertWithIcon[] = [];
 
   constructor(public navCtrl: NavController, public firebaseProvider: FirebaseProvider, public navParams: NavParams) {
-    //this.subscription = this.listenAlertStream();
   }
 
   defineIconByEventCategory(eventCategory : string){
@@ -43,9 +42,8 @@ export class HomePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad tab1Page', this.navParams);
-    this.refreshSubscription({ entityCategories: this.filters,
-      entityId: this.navParams.data.entityId
-    });
+    this.refreshSubscription(Object.assign({}, this.filters, { entityId: this.navParams.data.entityId
+    }));
     this.populateDisplayItems(); 
   }
 
@@ -62,10 +60,10 @@ export class HomePage {
     this.items = [];
     console.log(filter);
     return this.firebaseProvider.alert$()
-      .filter((alert: IAlert) => !filter.entityId || alert.entityId === filter.entityId)
-      .do( (alert:IAlert )=> console.log('2', alert.entityId))
-      // todo @Florian change condition .filter((alert: IAlert) => !filter.entityCategories || filter.entityCategories.some( t => t === alert.entityCategory))
-      // todo @Florian change condition .filter((alert: IAlert) => !filter.eventCategories || filter.eventCategories.some( t => t === alert.eventCategory))
+      .filter((alert: IAlert) =>  !filter.entityId || alert.entityId === filter.entityId)
+      .filter((alert: IAlert) =>  !filter.entityCategories || filter.entityCategories.some( t => t === alert.entityCategory))
+      .filter((alert: IAlert) =>  !filter.eventCategories || filter.eventCategories.some( t => t === alert.eventCategory))
+      .filter( (alert: IAlert) => !filter.searchInput || this.alertContains(alert, filter.searchInput))
       .map(alert => {
         return Object.assign({},
           alert,
@@ -87,9 +85,9 @@ export class HomePage {
         () => console.log('completed'));
   }
 
-  onFilterChange($event: string[]) {
+  onFilterChange($event: any) {
     this.filters = $event;
-    this.refreshSubscription({ entityCategories: $event } );
+    this.refreshSubscription(Object.assign({}, $event));
   }
 
   refreshSubscription(filter: TimelineFilter) {
@@ -97,4 +95,10 @@ export class HomePage {
     this.subscription = this.listenAlertStream(filter);
   }
 
+  private alertContains(alert: IAlert, searchInput: string): boolean {
+    return Object.keys(alert)
+      .map(key => alert[key])
+      .reduce( (acc, cur) => acc + cur, "")
+      .indexOf(searchInput) > -1;
+  }
 }
