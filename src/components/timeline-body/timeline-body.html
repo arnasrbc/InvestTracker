@@ -7,9 +7,16 @@
       </div>
       <!-- CUSTOMIZE YOUR STYLE USING DEFAULT IONIC VALUES SUCH AS POSITIVE, CALM, BALANCED,... -->
       <div class="cd-timeline-content padding {{item.entityCategory}}">
-        <h5 margin-left class="marginBottom0 marginTop5 timelineTitle">{{item.title}}</h5>
-        <p margin-left class="marginTop5 cd-author">On {{item.timestamp | date: "dd/MM/yyyy"}} at {{item.timestamp | date: "hh:mm"}}</p>
-        <p margin-left class="timelineText">{{item.message}}</p>
+        <ion-row>
+          <ion-col>
+            <h5 margin-left class="marginBottom0 marginTop5 timelineTitle">{{item.title}}</h5>
+            <p margin-left class="marginTop5 cd-author">On {{item.timestamp | date: "dd/MM/yyyy"}} at {{item.timestamp | date: "hh:mm"}}</p>
+          </ion-col>
+          <ion-col>
+            <ion-icon (click)="toggleDetails(item)" style="float: right;padding: 10px;" class="icon-flipped" name="more"></ion-icon>
+          </ion-col>
+        </ion-row>
+        <p margin-left *ngIf="item.showDetails" timelineText>{{item.message}}</p>
       </div>
     </div>
   </div>

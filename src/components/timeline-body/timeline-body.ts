@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { IAlertWithIcon } from '../../models/alert.interface';
+import { PopoverController} from 'ionic-angular';
 
 @Component({
   selector: 'timeline-body',
@@ -10,7 +11,7 @@ export class TimelineBodyComponent {
   doInfiniteScroll: EventEmitter<void>;
 
   @Input('items') items : IAlertWithIcon[];
-  constructor() {
+  constructor(public popoverCtrl: PopoverController) {
     this.doInfiniteScroll = new EventEmitter<void>();
   }
 
@@ -23,6 +24,10 @@ export class TimelineBodyComponent {
       console.log('Async operation has ended');
       infiniteScroll.complete();
     }, 1500);
+  }
+
+  toggleDetails(item) {
+    item.showDetails = !item.showDetails;
   }
 
 }
