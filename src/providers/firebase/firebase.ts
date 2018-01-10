@@ -15,7 +15,7 @@ export class FirebaseProvider {
   alertCollectionRef: AngularFirestoreCollection<any>;
 
   constructor(public db: AngularFirestore) {
-    this.alertCollectionRef = db.collection('alerts', ref => ref.orderBy('timestamp', 'desc'));
+    this.alertCollectionRef = db.collection('alerts', ref => ref.orderBy('timestamp', 'asc'));
   }
 
   alert$() {
