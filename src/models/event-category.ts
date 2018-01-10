@@ -11,24 +11,19 @@ export const EVENT_CATEGORIES: EventCategroy[] = [
         code: 'new_share_class'
     },
     {
-        icon: 'trending-up',
-        label: 'Balance for the share class over X',
-        code: 'balance_share_class_over_x'
+        icon: 'alert',
+        label: 'Liquidated Share Class',
+        code: 'liquidated_share_class'
     },
     {
         icon: 'add-circle',
-        label: 'New Account ',
-        code: 'new_account'
+        label: 'New Legal Found ',
+        code: 'new_legal_fund'
     },
     {
         icon: 'warning',
-        label: 'Account is Blocked ',
-        code: 'account_blocked'
-    },
-    {
-        icon: 'trending-up',
-        label: 'Balance for the account over X',
-        code: 'balance_account_over_x'
-    },
+        label: 'Holding is Blocked ',
+        code: 'holding_blocked'
+    }
 
 ];

@@ -15,6 +15,9 @@ export class HomePage {
   items: IAlertWithIcon[] = [];
   filters: string[];
   subscription: Subscription;
+  alertsPerPage: number = 5;
+  lastIndexAlertPerpage: number =0;
+  displayItems: IAlertWithIcon[] = [];
 
   constructor(public navCtrl: NavController, public firebaseProvider: FirebaseProvider, public navParams: NavParams) {
     //this.subscription = this.listenAlertStream();
@@ -43,8 +46,17 @@ export class HomePage {
     this.refreshSubscription({ entityCategories: this.filters,
       entityId: this.navParams.data.entityId
     });
+    this.populateDisplayItems(); 
   }
 
+  populateDisplayItems(){
+    var endIndex = (this.alertsPerPage + this.lastIndexAlertPerpage);
+
+    if(this.items && this.items.length > endIndex){
+      this.displayItems = this.items.slice(this.lastIndexAlertPerpage, this.alertsPerPage);
+      this.lastIndexAlertPerpage = this.displayItems.length;
+    }
+  }
 
   listenAlertStream(filter?: TimelineFilter): Subscription {
     this.items = [];
@@ -63,7 +75,14 @@ export class HomePage {
           });
       })
       .subscribe(
-        (alertWithIcon: IAlertWithIcon) =>  this.items.unshift(alertWithIcon),
+        (alertWithIcon: IAlertWithIcon) =>  {
+          this.items.unshift(alertWithIcon);
+
+          //If the Display Items is already loaded for the first time, we should add the new alert to the list
+          if(this.displayItems){
+            this.displayItems.unshift(alertWithIcon);
+          }
+        },
         error => console.error(error),
         () => console.log('completed'));
   }

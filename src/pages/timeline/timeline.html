@@ -8,5 +8,5 @@
 
 <ion-content padding>
   <timeline-filter (filterChange)="onFilterChange($event)"></timeline-filter>
-  <timeline-body [items]="items"></timeline-body>
+  <timeline-body (doInfiniteScroll)="populateDisplayItems()" [items]="displayItems"></timeline-body>
 </ion-content>
