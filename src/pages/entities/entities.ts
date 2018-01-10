@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { ElasticsearchProvider } from "../../providers/elasticsearch/elasticsearch";
-import { Entity } from '../../models/entity';
-import { HomePage } from '../timeline/timeline';
+import {Component} from '@angular/core';
+import {ModalController, NavController} from 'ionic-angular';
+import {ElasticsearchProvider} from "../../providers/elasticsearch/elasticsearch";
+import {Entity} from '../../models/entity';
+import {HomePage} from '../timeline/timeline';
+import {EntitiesFilterModalComponent} from "../../components/entities-filter-modal/entities-filter-modal";
 
 @Component({
   selector: 'page-entities',
@@ -11,8 +12,9 @@ import { HomePage } from '../timeline/timeline';
 export class AboutPage {
 
   entities: Entity[];
+  entitiesFilter: string[];
 
-  constructor(public navCtrl: NavController, public elasticsearch: ElasticsearchProvider) {
+  constructor(public navCtrl: NavController, public elasticsearch: ElasticsearchProvider, private _modalCtrl: ModalController) {
     this.entities = [];
   }
 
@@ -27,7 +29,6 @@ export class AboutPage {
         for (let result of response.hits.hits) {
           const entity = result._source;
           this.entities.push(new Entity(entity.entity_id, entity.entity_name, entity.entity_category))
-          console.log(result._source.entity_id);
         }
       }, error => {
         console.error(error);
@@ -48,5 +49,16 @@ export class AboutPage {
 
   onCancel(){
     console.log("onCancel");
+  }
+
+  presentFilterModal() {
+    let filterModal = this._modalCtrl.create(EntitiesFilterModalComponent, { filter: this.entitiesFilter});
+    filterModal.onDidDismiss( (data: { filter: any }) => {
+      this.entitiesFilter = data.filter;
+      this.elasticsearch.a(null, "a", null).then(
+        res => console.log(res)
+      )
+    });
+    filterModal.present();
   }
 }

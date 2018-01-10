@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Client} from "elasticsearch";
 
 @Injectable()
 export class ElasticsearchProvider {
 
-  private client : Client;
+  private client: Client;
 
   constructor() {
     this.client = new Client({
@@ -21,4 +21,32 @@ export class ElasticsearchProvider {
     });
   }
 
+  a(_index, _queryText, _fields) {
+    console.log('aaa')
+    return this.client.search({
+      index: "tracker",
+      body: {
+        query: {
+          "bool": {
+            "must": [
+              {
+                "query_string": {
+                  "query": "a"
+                }
+              },
+              {
+                "terms":
+                  {
+                    "entity_category.keyword" : [ "SHARE_CLASS", "LEGAL_FUND"]
+                  }
+              }
+            ]
+          }
+        }
+      }
+    });
+  }
+
 }
+
+

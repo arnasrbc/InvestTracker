@@ -7,22 +7,31 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-searchbar
-    [(ngModel)]="myInput"
-    [showCancelButton]="shouldShowCancel"
-    (ionInput)="onInput($event)"
-    (ionCancel)="onCancel($event)"
-    placeholder="Type search query to get entity list"
-  >
-  </ion-searchbar>
-    <ion-list>
-      <ion-label *ngIf="entities.length !== 0">{{entities.length}} results found for query '{{myInput}}'</ion-label>
-      <button
-        ion-item
-        *ngFor="let entity of entities"
-        (click)="onClick(entity.entityId)">
-        <h2>{{ entity.entityName | uppercase }}</h2>
-        <p>{{ entity.entityCategory }}</p>
+  <ion-toolbar>
+    <ion-searchbar
+      [(ngModel)]="myInput"
+      [showCancelButton]="shouldShowCancel"
+      (ionInput)="onInput($event)"
+      (ionCancel)="onCancel($event)"
+      placeholder="Type search query to get entity list"
+    >
+    </ion-searchbar>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="presentFilterModal()">
+        <ion-icon name="ios-funnel"></ion-icon>
       </button>
-    </ion-list>
+    </ion-buttons>
+  </ion-toolbar>
+
+
+  <ion-list>
+    <ion-label *ngIf="entities.length !== 0">{{entities.length}} results found for query '{{myInput}}'</ion-label>
+    <button
+      ion-item
+      *ngFor="let entity of entities"
+      (click)="onClick(entity.entityId)">
+      <h2>{{ entity.entityName | uppercase }}</h2>
+      <p>{{ entity.entityCategory }}</p>
+    </button>
+  </ion-list>
 </ion-content>
