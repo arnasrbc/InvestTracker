@@ -13,6 +13,7 @@ export class AboutPage {
 
   entities: Entity[];
   entitiesFilter: string[];
+  private searchInput: string;
 
   constructor(public navCtrl: NavController, public elasticsearch: ElasticsearchProvider, private _modalCtrl: ModalController) {
     this.entities = [];
@@ -23,7 +24,13 @@ export class AboutPage {
   }
 
   onInput(event){
-    this.elasticsearch.fullTextSearch('tracker', '*' + event.target.value + '*').then(
+    this.searchInput = event.target.value;
+    this.updateEntitiesList();
+    console.log("onInput" + event.target.value);
+  }
+
+  private updateEntitiesList() {
+    this.elasticsearch.fullTextSearchWithEntityCategoryFilter('tracker', '*' + this.searchInput + '*', this.entitiesFilter).then(
       (response) => {
         this.entities = [];
         for (let result of response.hits.hits) {
@@ -35,8 +42,6 @@ export class AboutPage {
       }).then(() => {
       console.log('Search Completed!');
     });
-
-    console.log("onInput" + event.target.value);
   }
 
   response(response){
@@ -55,9 +60,7 @@ export class AboutPage {
     let filterModal = this._modalCtrl.create(EntitiesFilterModalComponent, { filter: this.entitiesFilter});
     filterModal.onDidDismiss( (data: { filter: any }) => {
       this.entitiesFilter = data.filter;
-      this.elasticsearch.a(null, "a", null).then(
-        res => console.log(res)
-      )
+      this.updateEntitiesList();
     });
     filterModal.present();
   }

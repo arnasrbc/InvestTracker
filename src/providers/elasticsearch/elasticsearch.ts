@@ -21,23 +21,22 @@ export class ElasticsearchProvider {
     });
   }
 
-  a(_index, _queryText, _fields) {
-    console.log('aaa')
+  fullTextSearchWithEntityCategoryFilter(_index, _queryText, categories: string[]): any {
     return this.client.search({
-      index: "tracker",
+      index: _index,
       body: {
         query: {
           "bool": {
             "must": [
               {
                 "query_string": {
-                  "query": "a"
+                  "query": _queryText
                 }
               },
               {
                 "terms":
                   {
-                    "entity_category.keyword" : [ "SHARE_CLASS", "LEGAL_FUND"]
+                    "entity_category.keyword" : categories.map( c => c.toUpperCase())
                   }
               }
             ]
