@@ -1,29 +1,21 @@
-<section id="cd-timeline" class="cd-container">
-  <div *ngFor="let item of items">
-    <div class="cd-timeline-block">
-      <!-- CUSTOMIZE YOUR STYLE USING DEFAULT IONIC VALUES SUCH AS POSITIVE, CALM, BALANCED,... -->
-      <div class="cd-timeline-icon text-center {{item.entityCategory}}">
-        <ion-icon name ="{{item.icon}}" class="timelineIcon"></ion-icon>
-      </div>
-      <!-- CUSTOMIZE YOUR STYLE USING DEFAULT IONIC VALUES SUCH AS POSITIVE, CALM, BALANCED,... -->
-      <div class="cd-timeline-content padding {{item.entityCategory}}">
-        <ion-row>
-          <ion-col col-5>
-            <h5 margin-left class="marginBottom0 marginTop5 timelineTitle">{{item.title}}</h5>
-            <p margin-left class="marginTop5 cd-author">On {{item.timestamp | date: "dd/MM/yyyy"}} at {{item.timestamp | date: "hh:mm"}}</p>
-          </ion-col>
-          <ion-col col-5>
-            <h5 margin-left class="marginTop5 cd-author">#{{item.entityCategory}}</h5>
-          </ion-col>
-          <ion-col col-2>
-            <ion-icon (click)="toggleDetails(item)" style="float: right;padding: 10px;" class="icon-flipped" name="more"></ion-icon>
-          </ion-col>
-        </ion-row>
-        <p margin-left *ngIf="item.showDetails" class="timelineText">{{item.message}}</p>
-      </div>
-    </div>
-  </div>
-</section>
+<ion-card *ngFor="let item of items">
+    <ion-item class="timelineItem">
+      <ion-avatar item-start class="timelineAvatar">
+          <ion-icon name="{{item.icon}}" id="timelineIcon"></ion-icon>
+      </ion-avatar>
+      <h2>{{item.title}} ({{item.entityId}})</h2>
+      <p>On {{item.timestamp | date: "dd/MM/yyyy"}} at {{item.timestamp | date: "hh:mm"}}</p>
+      <p>#{{item.entityCategory}}<p>
+      <ion-fab right top>
+          <button>
+              <ion-icon (click)="toggleDetails(item)" class="icon-flipped" name="more"></ion-icon>
+          </button>
+        </ion-fab>
+    </ion-item>
+    <ion-card-content *ngIf="item.showDetails">
+        <p>{{item.message}}</p>
+    </ion-card-content>
+</ion-card>
 
 <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
     <ion-infinite-scroll-content
