@@ -13,6 +13,8 @@ export class AboutPage {
 
   entities: Entity[];
   total: number;
+  entitiesFilter: string[];
+  private searchInput: string;
 
   constructor(public navCtrl: NavController, public elasticsearch: ElasticsearchProvider, private _modalCtrl: ModalController) {
     this.entities = [];
