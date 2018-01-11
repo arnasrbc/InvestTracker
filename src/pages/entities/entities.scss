@@ -4,4 +4,29 @@ page-entities {
     margin-right: auto;
     display: block;
   }
+
+  h2 {
+    font-size: 1.2rem !important;
+    margin-top: 0px !important;
+    font-weight: bold !important;
+  }
+
+  p {
+    color: #666;
+    font-size: 1.0rem;
+    font-style: italic;
+  }
+
+  .scroll-content {
+    padding: 0 !important;
+  }
+
+  .total-label {
+    padding-left: 16px;
+    color: #6c6c6c;
+  }
+
+  .greyish-background {
+    background-color: #efefef;
+  }
 }

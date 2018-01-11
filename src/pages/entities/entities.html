@@ -5,38 +5,41 @@
         <ion-title mode="ios"><img float-left src="assets/imgs/White-logo-triangle-IT.png"></ion-title>
       </ion-col>
       <ion-col align-self-center>
-        <ion-searchbar
-          [(ngModel)]="myInput"
-          [showCancelButton]="shouldShowCancel"
-          (ionInput)="onInput($event)"
-          (ionCancel)="onCancel($event)"
-          placeholder="Type search query to get entity list"
-        >
-        </ion-searchbar>
-      </ion-col>
+    <ion-title text-center>Invest Tracker
+    </ion-title>
+    </ion-col>
       <ion-col col-1 align-self-center float-right>
         <ion-buttons end>
-          <button ion-button icon-only (click)="presentFilterModal()">
-            <ion-icon name="ios-funnel"></ion-icon>
-          </button>
-        </ion-buttons>
-      </ion-col>
+      <button ion-button icon-only (click)="presentFilterModal()">
+        <ion-icon name="ios-funnel"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-col>
     </ion-row>
-  </ion-navbar>
+  </ion-navbar><ion-searchbar
+                 [(ngModel)]="myInput"
+                 [showCancelButton]="shouldShowCancel"
+                 (ionInput)="onInput($event)"
+                 (ionCancel)="onCancel($event)"
+                 placeholder="Type search query to get entity list"
+  >
+  </ion-searchbar>
 </ion-header>
-<ion-content padding>
+<ion-content padding [ngClass]="{ 'greyish-background': entities.length !== 0 }">
   <ion-spinner *ngIf="showSpinner" class='centered-spinner' name="dots"></ion-spinner>
+  <ion-label *ngIf="entities.length !== 0" class="total-label">{{total}} results found for query '{{myInput}}'
+  </ion-label>
+
   <ion-list *ngIf="entities.length > 0 && !showSpinner">
-    <ion-label *ngIf="entities.length !== 0">{{total}} results found for query '{{myInput}}'</ion-label>
     <button
       ion-item
       *ngFor="let entity of entities"
       (click)="onClick(entity.entityId)">
       <h2>{{ entity.entityName | uppercase }}</h2>
-      <p>{{ entity.entityCategory }}</p>
+      <p>#{{ entity.entityCategory }}</p>
     </button>
   </ion-list>
-  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+  <ion-infinite-scroll *ngIf="entities.length > 0 && !showSpinner" (ionInfinite)="doInfinite($event)">
     <ion-infinite-scroll-content
       loadingSpinner="dots"
       loadingText="">
