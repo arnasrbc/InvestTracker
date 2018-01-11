@@ -12,11 +12,14 @@ import {EntitiesFilterModalComponent} from "../../components/entities-filter-mod
 export class AboutPage {
 
   entities: Entity[];
+  total: number;
   entitiesFilter: string[];
   private searchInput: string;
+  private scrollId: string;
 
   constructor(public navCtrl: NavController, public elasticsearch: ElasticsearchProvider, private _modalCtrl: ModalController) {
     this.entities = [];
+    this.total = 0;
   }
 
   onClick(entityId){
@@ -36,18 +39,17 @@ export class AboutPage {
     if (this.entitiesFilter && this.entitiesFilter.length > 0) {
       elasticSearchPromise = this.elasticsearch.fullTextSearchWithEntityCategoryFilter('tracker', '*' + this.searchInput + '*', this.entitiesFilter);
     } else {
-      elasticSearchPromise =this.elasticsearch.fullTextSearch('tracker', '*' + this.searchInput + '*');
+      elasticSearchPromise =this.elasticsearch.fullTextSearch('tracker', '*' + this.searchInput + '*', "1m");
     }
 
     elasticSearchPromise.then(
       (response) => {
         this.entities = [];
-        for (let result of response.hits.hits) {
-          const entity = result._source;
-          this.entities.push(new Entity(entity.entity_id, entity.entity_name, entity.entity_category))
-        }
+        this.scrollId = response._scroll_id;
+
+        this.updateEntities(response);
       }, error => {
-        console.error(error); 
+        console.error(error);
       }).then(() => {
       console.log('Search Completed!');
     });
@@ -67,7 +69,24 @@ export class AboutPage {
 
   doInfinite(infiniteScroll) {
     console.log('Begin async operation');
+    this.elasticsearch.nextPage("1s", this.scrollId).then(
+      (response) => {
+        this.scrollId = response._scroll_id;
+        this.updateEntities(response);
+      }, error => {
+        console.error(error);
+      }).then(() => {
+      console.log('Search Completed!');
+    });
+    infiniteScroll.complete();
+  }
 
+  private updateEntities(response) {
+    this.total = response.hits.total;
+    for (let result of response.hits.hits) {
+      const entity = result._source;
+      this.entities.push(new Entity(entity.entity_id, entity.entity_name, entity.entity_category))
+    }
   }
 
   presentFilterModal() {

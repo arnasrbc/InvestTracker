@@ -14,11 +14,22 @@ export class ElasticsearchProvider {
     console.log('Elastic connected');
   }
 
-  fullTextSearch(_index, _queryText): any {
-    return this.client.search({
+  fullTextSearch(_index, _queryText, scrollTime): any {
+    let params : any = {
       index: _index,
       q: _queryText
-    });
+    };
+    if (scrollTime) {
+      params.scroll = scrollTime;
+    }
+    return this.client.search(params);
+  }
+
+  nextPage (scrollTime, scrollId): any {
+    return this.client.scroll({
+      scroll: scrollTime,
+      scrollId: scrollId
+    })
   }
 
   fullTextSearchWithEntityCategoryFilter(_index, _queryText, categories: string[]): any {
