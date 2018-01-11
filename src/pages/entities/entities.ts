@@ -49,4 +49,10 @@ export class AboutPage {
   onCancel(){
     console.log("onCancel");
   }
+
+  doInfinite(infiniteScroll) {
+    console.log('Begin async operation');
+
+  }
+
 }
