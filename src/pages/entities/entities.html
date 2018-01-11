@@ -16,7 +16,7 @@
   >
   </ion-searchbar>
     <ion-list>
-      <ion-label *ngIf="entities.length !== 0">{{entities.length}} results found for query '{{myInput}}'</ion-label>
+      <ion-label *ngIf="entities.length !== 0">{{total}} results found for query '{{myInput}}'</ion-label>
       <button
         ion-item
         *ngFor="let entity of entities"

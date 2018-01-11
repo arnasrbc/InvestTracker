@@ -11,9 +11,11 @@ import { HomePage } from '../timeline/timeline';
 export class AboutPage {
 
   entities: Entity[];
+  total: number;
 
   constructor(public navCtrl: NavController, public elasticsearch: ElasticsearchProvider) {
     this.entities = [];
+    this.total = 0;
   }
 
   onClick(entityId){
@@ -24,6 +26,8 @@ export class AboutPage {
     this.elasticsearch.fullTextSearch('tracker', '*' + event.target.value + '*').then(
       (response) => {
         this.entities = [];
+
+        this.total = response.hits.total;
         for (let result of response.hits.hits) {
           const entity = result._source;
           this.entities.push(new Entity(entity.entity_id, entity.entity_name, entity.entity_category))
