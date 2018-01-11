@@ -1,7 +1,6 @@
 <ion-header>
     <ion-navbar>
-      <ion-title text-center>InvestTracker</ion-title>
-      <ion-icon item-thumbnail-left name="search"></ion-icon>
+      <ion-title text-center>Invest Tracker</ion-title>
     </ion-navbar>
     <ion-toolbar>
       <ion-title>
@@ -10,6 +9,6 @@
     </ion-toolbar>
   </ion-header>
 
-<ion-content padding>
+<ion-content padding class="timelineContent">
   <timeline-body (doInfiniteScroll)="populateDisplayItems()" [items]="displayItems"></timeline-body>
 </ion-content>

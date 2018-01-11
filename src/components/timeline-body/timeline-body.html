@@ -1,13 +1,19 @@
 <ion-card *ngFor="let item of items">
-    <ion-item>
-      <ion-avatar item-start>
-          <ion-icon name="{{item.icon}}" class="timelineIcon"></ion-icon>
+    <ion-item class="timelineItem">
+      <ion-avatar item-start class="timelineAvatar">
+          <ion-icon name="{{item.icon}}" id="timelineIcon"></ion-icon>
       </ion-avatar>
-      <h2>{{item.title}}</h2>
+      <h2>{{item.title}} ({{item.entityId}})</h2>
       <p>On {{item.timestamp | date: "dd/MM/yyyy"}} at {{item.timestamp | date: "hh:mm"}}</p>
+      <p>#{{item.entityCategory}}<p>
+      <ion-fab right top>
+          <button>
+              <ion-icon (click)="toggleDetails(item)" class="icon-flipped" name="more"></ion-icon>
+          </button>
+        </ion-fab>
     </ion-item>
-    <ion-card-content>
-        <p>{{item.message}}</p>  
+    <ion-card-content *ngIf="item.showDetails">
+        <p>{{item.message}}</p>
     </ion-card-content>
 </ion-card>
 

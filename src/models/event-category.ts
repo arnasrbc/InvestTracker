@@ -24,6 +24,11 @@ export const EVENT_CATEGORIES: EventCategroy[] = [
         icon: 'warning',
         label: 'Holding is Blocked ',
         code: 'holding_blocked'
+    },
+    {
+        icon: 'trending-up',
+        label: 'Dealer Balance over threshold',
+        code: 'dealer_balance'
     }
 
 ];
