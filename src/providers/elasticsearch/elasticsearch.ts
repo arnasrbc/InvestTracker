@@ -32,10 +32,10 @@ export class ElasticsearchProvider {
     })
   }
 
-  fullTextSearchWithEntityCategoryFilter(_index, _queryText, categories: string[]): any {
-    return this.client.search({
+  fullTextSearchWithEntityCategoryFilter(_index, _queryText, categories: string[], scrollTime): any {
+    let params : any = {
       index: _index,
-      body: {
+        body: {
         query: {
           "bool": {
             "must": [
@@ -46,15 +46,21 @@ export class ElasticsearchProvider {
               },
               {
                 "terms":
-                  {
-                    "entity_category.keyword" : categories.map( c => c.toUpperCase())
-                  }
+                {
+                  "entity_category.keyword" : categories.map( c => c.toUpperCase())
+                }
               }
             ]
           }
         }
       }
-    });
+    };
+
+    if (scrollTime) {
+      params.scroll = scrollTime;
+    }
+
+    return this.client.search(params);
   }
 
 }

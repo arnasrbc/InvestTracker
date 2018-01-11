@@ -37,7 +37,7 @@ export class AboutPage {
     let elasticSearchPromise;
 
     if (this.entitiesFilter && this.entitiesFilter.length > 0) {
-      elasticSearchPromise = this.elasticsearch.fullTextSearchWithEntityCategoryFilter('tracker', '*' + this.searchInput + '*', this.entitiesFilter);
+      elasticSearchPromise = this.elasticsearch.fullTextSearchWithEntityCategoryFilter('tracker', '*' + this.searchInput + '*', this.entitiesFilter, "1m");
     } else {
       elasticSearchPromise =this.elasticsearch.fullTextSearch('tracker', '*' + this.searchInput + '*', "1m");
     }
@@ -69,7 +69,7 @@ export class AboutPage {
 
   doInfinite(infiniteScroll) {
     console.log('Begin async operation');
-    this.elasticsearch.nextPage("1s", this.scrollId).then(
+    this.elasticsearch.nextPage("1m", this.scrollId).then(
       (response) => {
         this.scrollId = response._scroll_id;
         this.updateEntities(response);
