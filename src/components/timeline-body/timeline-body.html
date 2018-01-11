@@ -5,8 +5,7 @@
           </ion-avatar>
           <h2>{{item.title}} ({{item.entityId}})</h2>
           <h3>{{item.entityName}}</h3>
-          <p>On {{item.timestamp | date: "dd/MM/yyyy"}} at {{item.timestamp | date: "hh:mm"}}</p>
-          <p>#{{item.entityCategory}}<p>
+          <p>#{{item.entityCategory}} - On {{item.timestamp | date: "dd/MM/yyyy"}} at {{item.timestamp | date: "hh:mm"}}</p>
     </ion-item>
  
     <ion-card-content *ngIf="item.showDetails">
