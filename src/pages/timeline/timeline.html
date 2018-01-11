@@ -1,13 +1,13 @@
 <ion-header>
   <ion-navbar>
     <ion-row>
-      <ion-col col-3 align-self-center>
-        <ion-title mode="ios"><img float-left src="assets/imgs/White-logo-triangle-IT.png"></ion-title>
-      </ion-col>
+      
+        <ion-title class="logoIcon"><img src="assets/imgs/White-logo-triangle-IT.png"></ion-title>
+      
 
-      <ion-col col-1 align-self-center>
+      <div float-right>
         <timeline-filter (filterChange)="onFilterChange($event)" class="search"></timeline-filter>
-      </ion-col>
+      </div>
     </ion-row>
   </ion-navbar>
 </ion-header>
