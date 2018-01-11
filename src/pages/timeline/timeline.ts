@@ -46,7 +46,7 @@ export class HomePage {
 
   populateDisplayItems(){
     let endIndex = (this.alertsPerPage + this.lastIndexAlertPerpage);
-    if(this.items && this.items.length > endIndex){
+    if(this.items && this.items.length >= endIndex){
       this.displayItems.push(...this.items.slice(this.lastIndexAlertPerpage, endIndex));
       this.lastIndexAlertPerpage = this.displayItems.length;
     }
