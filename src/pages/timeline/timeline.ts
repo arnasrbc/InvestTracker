@@ -15,7 +15,7 @@ export class HomePage {
   items: IAlertWithIcon[] = [];
   filters: any;
   subscription: Subscription;
-  alertsPerPage: number = 5;
+  alertsPerPage: number = 15;
   lastIndexAlertPerpage: number =0;
   displayItems: IAlertWithIcon[] = [];
 
@@ -41,24 +41,20 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad tab1Page', this.navParams);
-    this.refreshSubscription(Object.assign({}, this.filters, { entityId: this.navParams.data.entityId
-    }));
-    this.populateDisplayItems(); 
+    this.refreshSubscription(Object.assign({}, this.filters, { entityId: this.navParams.data.entityId}));
   }
 
   populateDisplayItems(){
-    var endIndex = (this.alertsPerPage + this.lastIndexAlertPerpage);
-
+    let endIndex = (this.alertsPerPage + this.lastIndexAlertPerpage);
     if(this.items && this.items.length > endIndex){
-      this.displayItems = this.items.slice(this.lastIndexAlertPerpage, this.alertsPerPage);
+      console.log('slice', this.items.slice(this.lastIndexAlertPerpage, endIndex));
+      this.displayItems.push(...this.items.slice(this.lastIndexAlertPerpage, endIndex));
       this.lastIndexAlertPerpage = this.displayItems.length;
     }
   }
 
   listenAlertStream(filter?: TimelineFilter): Subscription {
     this.items = [];
-    console.log(filter);
     return this.firebaseProvider.alert$()
       .filter((alert: IAlert) =>  !filter.entityId || alert.entityId === filter.entityId)
       .filter((alert: IAlert) =>  !filter.entityCategories || filter.entityCategories.some( t => t === alert.entityCategory))
@@ -75,9 +71,10 @@ export class HomePage {
       .subscribe(
         (alertWithIcon: IAlertWithIcon) =>  {
           this.items.unshift(alertWithIcon);
+          console.log('length',this.items.length);
 
           //If the Display Items is already loaded for the first time, we should add the new alert to the list
-          if(this.displayItems){
+          if(this.displayItems && this.displayItems.length > 0){
             this.displayItems.unshift(alertWithIcon);
           }
         },
@@ -92,7 +89,12 @@ export class HomePage {
 
   refreshSubscription(filter: TimelineFilter) {
     if (this.subscription) { this.subscription.unsubscribe(); }
+    this.displayItems = [];
+    this.lastIndexAlertPerpage = 0;
     this.subscription = this.listenAlertStream(filter);
+    // setTimeout( () => {
+      this.populateDisplayItems();
+    // }, 5000);
   }
 
   private alertContains(alert: IAlert, searchInput: string): boolean {

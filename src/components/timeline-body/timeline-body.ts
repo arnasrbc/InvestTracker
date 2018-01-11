@@ -23,7 +23,7 @@ export class TimelineBodyComponent {
 
       console.log('Async operation has ended');
       infiniteScroll.complete();
-    }, 1500);
+    }, 500);
   }
 
   toggleDetails(item) {
