@@ -12,11 +12,21 @@
 }
 
 .timelineContent h2{
-  font-size: 1.5rem !important;
+  font-size: 1.2rem !important;
+  margin-top: 0px !important;
+  font-weight: bold;
+}
+
+.timelineContent h3{
+  font-size: 1.1rem !important;
+  margin-top: 0px !important;
+  font-style: italic;
 }
 
 .timelineItem p{
   color: #666;
+  font-size: 1.0rem;
+  font-style: italic;
 }
 
 .timelineContent{
@@ -25,5 +35,9 @@
 
 .timelineContent .scroll-content{
   padding: 0px !important;
+}
+
+.timelineContent .timelineMessage{
+  font-size: 1.1rem;
 }
 
