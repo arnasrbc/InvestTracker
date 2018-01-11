@@ -1,26 +1,26 @@
 <ion-header>
-    <ion-toolbar>
-        <ion-searchbar
-          [(ngModel)]="myInput"
-          [showCancelButton]="shouldShowCancel"
-          (ionInput)="onInput($event)"
-          (ionCancel)="onCancel($event)"
-          placeholder="Type search query to get entity list"
-        >
-        </ion-searchbar>
-      <ion-buttons end>
-        <button ion-button icon-only (click)="presentFilterModal()">
-          <ion-icon name="ios-funnel"></ion-icon>
-        </button>
-      </ion-buttons>
-    </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar
+      [(ngModel)]="myInput"
+      [showCancelButton]="shouldShowCancel"
+      (ionInput)="onInput($event)"
+      (ionCancel)="onCancel($event)"
+      placeholder="Type search query to get entity list"
+    >
+    </ion-searchbar>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="presentFilterModal()">
+        <ion-icon name="ios-funnel"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
 
+  <ion-spinner *ngIf="showSpinner" class='centered-spinner' name="dots"></ion-spinner>
 
-
-  <ion-list>
+  <ion-list *ngIf="entities.length > 0 && !showSpinner">
     <ion-label *ngIf="entities.length !== 0">{{total}} results found for query '{{myInput}}'</ion-label>
     <button
       ion-item
@@ -30,10 +30,10 @@
       <p>{{ entity.entityCategory }}</p>
     </button>
   </ion-list>
-    <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
-      <ion-infinite-scroll-content
-        loadingSpinner="dots"
-        loadingText="">
-      </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="dots"
+      loadingText="">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
