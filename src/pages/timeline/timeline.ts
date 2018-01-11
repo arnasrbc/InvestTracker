@@ -15,7 +15,7 @@ export class HomePage {
   items: IAlertWithIcon[] = [];
   filters: any;
   subscription: Subscription;
-  alertsPerPage: number = 15;
+  alertsPerPage: number = 10;
   lastIndexAlertPerpage: number =0;
   displayItems: IAlertWithIcon[] = [];
 
