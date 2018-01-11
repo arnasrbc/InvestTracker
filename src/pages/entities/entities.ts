@@ -30,7 +30,16 @@ export class AboutPage {
   }
 
   private updateEntitiesList() {
-    this.elasticsearch.fullTextSearchWithEntityCategoryFilter('tracker', '*' + this.searchInput + '*', this.entitiesFilter).then(
+
+    let elasticSearchPromise;
+
+    if (this.entitiesFilter && this.entitiesFilter.length > 0) {
+      elasticSearchPromise = this.elasticsearch.fullTextSearchWithEntityCategoryFilter('tracker', '*' + this.searchInput + '*', this.entitiesFilter);
+    } else {
+      elasticSearchPromise =this.elasticsearch.fullTextSearch('tracker', '*' + this.searchInput + '*');
+    }
+
+    elasticSearchPromise.then(
       (response) => {
         this.entities = [];
         for (let result of response.hits.hits) {
@@ -38,7 +47,7 @@ export class AboutPage {
           this.entities.push(new Entity(entity.entity_id, entity.entity_name, entity.entity_category))
         }
       }, error => {
-        console.error(error);
+        console.error(error); 
       }).then(() => {
       console.log('Search Completed!');
     });
