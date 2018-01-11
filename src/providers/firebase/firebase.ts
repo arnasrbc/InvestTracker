@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AngularFirestore, AngularFirestoreCollection, DocumentChangeAction} from 'angularfire2/firestore';
 import {Observable} from 'rxjs/Rx';
-import * as firebase from "firebase";
-import DocumentChangeType = firebase.firestore.DocumentChangeType;
 
 /*
   Generated class for the FirebaseProvider provider.
@@ -17,7 +15,7 @@ export class FirebaseProvider {
   alertCollectionRef: AngularFirestoreCollection<any>;
 
   constructor(public db: AngularFirestore) {
-    this.alertCollectionRef = db.collection('alerts')
+    this.alertCollectionRef = db.collection('alerts', ref => ref.orderBy('timestamp', 'asc'));
   }
 
   alert$() {
