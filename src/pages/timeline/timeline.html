@@ -1,7 +1,20 @@
 <ion-header>
   <ion-navbar>
-    <ion-title text-center>Invest Tracker</ion-title>
-    <timeline-filter (filterChange)="onFilterChange($event)" class="search"></timeline-filter>
+    <ion-row>
+      <ion-col col-1 align-self-center>
+        <ion-title>
+          <img alt="logo" height="40" src="assets/imgs/White-Logo-IT.png">
+        </ion-title>
+      </ion-col>
+      <ion-col align-self-center>
+        <ion-title text-center>
+          <span>Invest Tracker</span>
+        </ion-title>
+      </ion-col>
+      <ion-col col-1 align-self-center>
+        <timeline-filter (filterChange)="onFilterChange($event)" class="search"></timeline-filter>
+      </ion-col>
+    </ion-row>
   </ion-navbar>
 </ion-header>
 

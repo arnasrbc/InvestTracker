@@ -1,25 +1,33 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-searchbar
-      [(ngModel)]="myInput"
-      [showCancelButton]="shouldShowCancel"
-      (ionInput)="onInput($event)"
-      (ionCancel)="onCancel($event)"
-      placeholder="Type search query to get entity list"
-    >
-    </ion-searchbar>
-    <ion-buttons end>
-      <button ion-button icon-only (click)="presentFilterModal()">
-        <ion-icon name="ios-funnel"></ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-toolbar>
+  <ion-navbar>
+    <ion-row>
+      <ion-col col-1 align-self-center>
+        <ion-title align-self-center>
+          <img alt="logo" height="40" src="assets/imgs/White-Logo-IT.png">
+        </ion-title>
+      </ion-col>
+      <ion-col align-self-center>
+        <ion-searchbar
+          [(ngModel)]="myInput"
+          [showCancelButton]="shouldShowCancel"
+          (ionInput)="onInput($event)"
+          (ionCancel)="onCancel($event)"
+          placeholder="Type search query to get entity list"
+        >
+        </ion-searchbar>
+      </ion-col>
+      <ion-col col-1 align-self-center>
+        <ion-buttons end>
+          <button ion-button icon-only (click)="presentFilterModal()">
+            <ion-icon name="ios-funnel"></ion-icon>
+          </button>
+        </ion-buttons>
+      </ion-col>
+    </ion-row>
+  </ion-navbar>
 </ion-header>
-
 <ion-content padding>
-
   <ion-spinner *ngIf="showSpinner" class='centered-spinner' name="dots"></ion-spinner>
-
   <ion-list *ngIf="entities.length > 0 && !showSpinner">
     <ion-label *ngIf="entities.length !== 0">{{total}} results found for query '{{myInput}}'</ion-label>
     <button
