@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
-import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
+import {AngularFirestore, AngularFirestoreCollection, DocumentChangeAction} from 'angularfire2/firestore';
 import {Observable} from 'rxjs/Rx';
+import * as firebase from "firebase";
+import DocumentChangeType = firebase.firestore.DocumentChangeType;
 
 /*
   Generated class for the FirebaseProvider provider.
@@ -15,20 +17,21 @@ export class FirebaseProvider {
   alertCollectionRef: AngularFirestoreCollection<any>;
 
   constructor(public db: AngularFirestore) {
-    this.alertCollectionRef = db.collection('alerts');
+    this.alertCollectionRef = db.collection('alerts')
   }
 
   alert$() {
     let firstLoad = true;
-    return this.alertCollectionRef.valueChanges()
+    return this.alertCollectionRef.stateChanges(['added'])
       .flatMap(arr => {
-        console.log('arr', arr);
-        let o =Observable.combineLatest(Observable.of(firstLoad), Observable.from(arr));
+        let o = Observable.combineLatest(Observable.of(firstLoad), Observable.from(arr));
         firstLoad = false;
-        return Observable.from(arr);
+        return o;
       })
-      .do( a => console.log('d', a))
-      .map( (firebaseAlert) => {
+      .map( ([load, firebaseAlert]: [boolean, DocumentChangeAction]) => {
+        return [load, firebaseAlert.payload.doc.data()]
+      })
+      .map( ([load, firebaseAlert]: [boolean, any]) => {
         return {
           id: firebaseAlert.id,
           entityName: firebaseAlert.entity_name,
@@ -37,7 +40,7 @@ export class FirebaseProvider {
           eventCategory: firebaseAlert.event_category,
           message: firebaseAlert.message,
           timestamp: firebaseAlert.timestamp,
-          //firstLoad: loadStatus
+          firstLoad: load
         }
       });
   }

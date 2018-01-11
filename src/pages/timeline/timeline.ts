@@ -47,7 +47,6 @@ export class HomePage {
   populateDisplayItems(){
     let endIndex = (this.alertsPerPage + this.lastIndexAlertPerpage);
     if(this.items && this.items.length > endIndex){
-      console.log('slice', this.items.slice(this.lastIndexAlertPerpage, endIndex));
       this.displayItems.push(...this.items.slice(this.lastIndexAlertPerpage, endIndex));
       this.lastIndexAlertPerpage = this.displayItems.length;
     }
@@ -71,11 +70,13 @@ export class HomePage {
       .subscribe(
         (alertWithIcon: IAlertWithIcon) =>  {
           this.items.unshift(alertWithIcon);
-          console.log('length',this.items.length);
 
           //If the Display Items is already loaded for the first time, we should add the new alert to the list
-          if(this.displayItems && this.displayItems.length > 0){
+          if(!alertWithIcon.firstLoad){
             this.displayItems.unshift(alertWithIcon);
+          } else if( this.displayItems.length < this.alertsPerPage ) {
+            this.displayItems.unshift(alertWithIcon);
+            this.lastIndexAlertPerpage = this.displayItems.length;
           }
         },
         error => console.error(error),
@@ -92,9 +93,6 @@ export class HomePage {
     this.displayItems = [];
     this.lastIndexAlertPerpage = 0;
     this.subscription = this.listenAlertStream(filter);
-    // setTimeout( () => {
-      this.populateDisplayItems();
-    // }, 5000);
   }
 
   private alertContains(alert: IAlert, searchInput: string): boolean {
