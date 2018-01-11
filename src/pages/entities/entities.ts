@@ -71,7 +71,7 @@ export class AboutPage {
     console.log("onCancel");
   }
 
-  doInfinite() {
+  doInfinite(infiniteScroll) {
     console.log('Begin async operation');
     this.elasticsearch.nextPage("1s", this.scrollId).then(
       (response) => {
@@ -87,7 +87,7 @@ export class AboutPage {
       }).then(() => {
       console.log('Search Completed!');
     });
-
+    infiniteScroll.complete();
   }
 
   presentFilterModal() {
