@@ -1,27 +1,23 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>
-      Entities
-    </ion-title>
-  </ion-navbar>
+    <ion-toolbar>
+        <ion-searchbar
+          [(ngModel)]="myInput"
+          [showCancelButton]="shouldShowCancel"
+          (ionInput)="onInput($event)"
+          (ionCancel)="onCancel($event)"
+          placeholder="Type search query to get entity list"
+        >
+        </ion-searchbar>
+      <ion-buttons end>
+        <button ion-button icon-only (click)="presentFilterModal()">
+          <ion-icon name="ios-funnel"></ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-  <ion-toolbar>
-    <ion-searchbar
-      [(ngModel)]="myInput"
-      [showCancelButton]="shouldShowCancel"
-      (ionInput)="onInput($event)"
-      (ionCancel)="onCancel($event)"
-      placeholder="Type search query to get entity list"
-    >
-    </ion-searchbar>
-    <ion-buttons end>
-      <button ion-button icon-only (click)="presentFilterModal()">
-        <ion-icon name="ios-funnel"></ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-toolbar>
+
 
 
   <ion-list>
