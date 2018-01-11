@@ -4,6 +4,7 @@ import {ElasticsearchProvider} from "../../providers/elasticsearch/elasticsearch
 import {Entity} from '../../models/entity';
 import {HomePage} from '../timeline/timeline';
 import {EntitiesFilterModalComponent} from "../../components/entities-filter-modal/entities-filter-modal";
+import {Subject} from "rxjs/Subject";
 
 @Component({
   selector: 'page-entities',
@@ -16,54 +17,57 @@ export class AboutPage {
   entitiesFilter: string[];
   private searchInput: string;
   private scrollId: string;
+  showSpinner: boolean;
+  searchUpdate$:Subject<string> = new Subject();
 
   constructor(public navCtrl: NavController, public elasticsearch: ElasticsearchProvider, private _modalCtrl: ModalController) {
     this.entities = [];
     this.total = 0;
+    this.showSpinner = false;
+    this.listenForInputChange();
   }
 
-  onClick(entityId){
+  onClick(entityId) {
     this.navCtrl.push(HomePage, {entityId: entityId});
   }
 
-  onInput(event){
-    this.searchInput = event.target.value;
-    this.updateEntitiesList();
-    console.log("onInput" + event.target.value);
+  onInput(event) {
+    this.searchUpdate$.next(event.target.value);
   }
 
   private updateEntitiesList() {
-
+    this.entities = [];
+    this.showSpinner = true;
     let elasticSearchPromise;
 
     if (this.entitiesFilter && this.entitiesFilter.length > 0) {
       elasticSearchPromise = this.elasticsearch.fullTextSearchWithEntityCategoryFilter('tracker', '*' + this.searchInput + '*', this.entitiesFilter, "1m");
     } else {
-      elasticSearchPromise =this.elasticsearch.fullTextSearch('tracker', '*' + this.searchInput + '*', "1m");
+      elasticSearchPromise = this.elasticsearch.fullTextSearch('tracker', '*' + this.searchInput + '*', "1m");
     }
-
     elasticSearchPromise.then(
       (response) => {
-        this.entities = [];
         this.scrollId = response._scroll_id;
-
         this.updateEntities(response);
+        this.showSpinner = false;
       }, error => {
         console.error(error);
+        this.showSpinner = false;
       }).then(() => {
       console.log('Search Completed!');
+      this.showSpinner = false;
     });
   }
 
-  response(response){
+  response(response) {
     console.log("response" + response.hits);
   }
 
-  error(){
+  error() {
     console.log("error");
   }
 
-  onCancel(){
+  onCancel() {
     console.log("onCancel");
   }
 
@@ -90,11 +94,20 @@ export class AboutPage {
   }
 
   presentFilterModal() {
-    let filterModal = this._modalCtrl.create(EntitiesFilterModalComponent, { filter: this.entitiesFilter});
-    filterModal.onDidDismiss( (data: { filter: any }) => {
+    let filterModal = this._modalCtrl.create(EntitiesFilterModalComponent, {filter: this.entitiesFilter});
+    filterModal.onDidDismiss((data: { filter: any }) => {
       this.entitiesFilter = data.filter;
       this.updateEntitiesList();
     });
     filterModal.present();
+  }
+
+  private listenForInputChange() {
+    this.searchUpdate$.asObservable()
+      .throttleTime(500)
+      .subscribe( val => {
+        this.searchInput = val;
+        val == '' ? this.entities = [] : this.updateEntitiesList();
+      })
   }
 }
