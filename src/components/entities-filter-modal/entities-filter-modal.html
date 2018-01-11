@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-navbar>
+    <ion-buttons left>
+      <button ion-button (click)="cancel()">
+        <span ion-text color="primary">Cancel</span>
+      </button>
+    </ion-buttons>
+    <ion-title>Entity types</ion-title>
+    <ion-buttons right>
+      <button ion-button (click)="confirm()">
+        <span ion-text color="primary">Ok</span>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <!-- Entity types -->
+    <ion-list>
+      <ion-item *ngFor="let entityType of entityTypes">
+        <ion-label>{{ entityType.label }}</ion-label>
+        <ion-toggle [(ngModel)]="filterModel[entityType.code]"></ion-toggle>
+      </ion-item>
+    </ion-list>
+</ion-content>

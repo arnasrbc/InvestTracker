@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Client} from "elasticsearch";
 
 @Injectable()
 export class ElasticsearchProvider {
 
-  private client : Client;
+  private client: Client;
 
   constructor() {
     this.client = new Client({
@@ -21,4 +21,31 @@ export class ElasticsearchProvider {
     });
   }
 
+  fullTextSearchWithEntityCategoryFilter(_index, _queryText, categories: string[]): any {
+    return this.client.search({
+      index: _index,
+      body: {
+        query: {
+          "bool": {
+            "must": [
+              {
+                "query_string": {
+                  "query": _queryText
+                }
+              },
+              {
+                "terms":
+                  {
+                    "entity_category.keyword" : categories.map( c => c.toUpperCase())
+                  }
+              }
+            ]
+          }
+        }
+      }
+    });
+  }
+
 }
+
+
