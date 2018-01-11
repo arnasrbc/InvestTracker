@@ -19,7 +19,7 @@ export class ElasticsearchProvider {
       index: _index,
       q: _queryText
     };
-    if (scroll) {
+    if (scrollTime) {
       params.scroll = scrollTime;
     }
     return this.client.search(params);

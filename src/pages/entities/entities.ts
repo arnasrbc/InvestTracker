@@ -47,11 +47,7 @@ export class AboutPage {
         this.entities = [];
         this.scrollId = response._scroll_id;
 
-        this.total = response.hits.total;
-        for (let result of response.hits.hits) {
-          const entity = result._source;
-          this.entities.push(new Entity(entity.entity_id, entity.entity_name, entity.entity_category))
-        }
+        this.updateEntities(response);
       }, error => {
         console.error(error);
       }).then(() => {
@@ -76,18 +72,21 @@ export class AboutPage {
     this.elasticsearch.nextPage("1s", this.scrollId).then(
       (response) => {
         this.scrollId = response._scroll_id;
-
-        this.total = response.hits.total;
-        for (let result of response.hits.hits) {
-          const entity = result._source;
-          this.entities.push(new Entity(entity.entity_id, entity.entity_name, entity.entity_category))
-        }
+        this.updateEntities(response);
       }, error => {
         console.error(error);
       }).then(() => {
       console.log('Search Completed!');
     });
     infiniteScroll.complete();
+  }
+
+  private updateEntities(response) {
+    this.total = response.hits.total;
+    for (let result of response.hits.hits) {
+      const entity = result._source;
+      this.entities.push(new Entity(entity.entity_id, entity.entity_name, entity.entity_category))
+    }
   }
 
   presentFilterModal() {
