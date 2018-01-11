@@ -1,11 +1,24 @@
-<section id="cd-timeline" class="cd-container">
+<ion-card *ngFor="let item of items">
+    <ion-item>
+      <ion-avatar item-start>
+          <ion-icon name="{{item.icon}}" class="timelineIcon"></ion-icon>
+      </ion-avatar>
+      <h2>{{item.title}}</h2>
+      <p>On {{item.timestamp | date: "dd/MM/yyyy"}} at {{item.timestamp | date: "hh:mm"}}</p>
+    </ion-item>
+    <ion-card-content>
+        <p>{{item.message}}</p>  
+    </ion-card-content>
+</ion-card>
+
+<!--<section id="cd-timeline" class="cd-container">
   <div *ngFor="let item of items">
     <div class="cd-timeline-block">
-      <!-- CUSTOMIZE YOUR STYLE USING DEFAULT IONIC VALUES SUCH AS POSITIVE, CALM, BALANCED,... -->
+      
       <div class="cd-timeline-icon text-center {{item.entityCategory}}">
         <ion-icon name ="{{item.icon}}" class="timelineIcon"></ion-icon>
       </div>
-      <!-- CUSTOMIZE YOUR STYLE USING DEFAULT IONIC VALUES SUCH AS POSITIVE, CALM, BALANCED,... -->
+      
       <div class="cd-timeline-content padding {{item.entityCategory}}">
         <ion-row>
           <ion-col col-5>
@@ -23,7 +36,9 @@
       </div>
     </div>
   </div>
-</section>
+</section> -->
+
+
 
 <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
     <ion-infinite-scroll-content

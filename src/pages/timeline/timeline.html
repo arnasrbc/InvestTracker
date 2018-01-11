@@ -1,12 +1,15 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>
-      <div text-center>InvestTracker</div>
-    </ion-title>
-  </ion-navbar>
-</ion-header>
+    <ion-navbar>
+      <ion-title text-center>InvestTracker</ion-title>
+      <ion-icon item-thumbnail-left name="search"></ion-icon>
+    </ion-navbar>
+    <ion-toolbar>
+      <ion-title>
+          <timeline-filter (filterChange)="onFilterChange($event)" class="search"></timeline-filter>
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
 
 <ion-content padding>
-  <timeline-filter (filterChange)="onFilterChange($event)"></timeline-filter>
   <timeline-body (doInfiniteScroll)="populateDisplayItems()" [items]="displayItems"></timeline-body>
 </ion-content>
