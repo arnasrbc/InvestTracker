@@ -29,21 +29,21 @@
   font-style: italic;
 }
 
-.timelineContent:before {
-  content: ' ';
-  display: block;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  opacity: 0.2;
-  background-image: url('../assets/imgs/logo-gray-rbc.png');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 700px;
-}
+// .timelineContent:before {
+//   content: ' ';
+//   display: block;
+//   position: absolute;
+//   left: 0;
+//   top: 0;
+//   width: 100%;
+//   height: 100%;
+//   z-index: 1;
+//   opacity: 0.2;
+//   background-image: url('../assets/imgs/logo-gray-rbc.png');
+//   background-repeat: no-repeat;
+//   background-position: center;
+//   background-size: 700px;
+// }
 
 .timelineContent .scroll-content{
   padding: 0px !important;
@@ -52,4 +52,3 @@
 .timelineContent .timelineMessage{
   font-size: 1.1rem;
 }
-

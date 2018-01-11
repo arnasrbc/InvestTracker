@@ -1,11 +1,10 @@
 <ion-header>
   <ion-navbar>
     <ion-row>
-      
-        <ion-title class="logoIcon"><img src="assets/imgs/White-logo-triangle-IT.png"></ion-title>
-      
-
-      <div float-right>
+      <div  class="logoIcon">
+          <img src="assets/imgs/White-logo-triangle-IT.png">
+      </div>
+      <div class="filter-logo-wrapper">
         <timeline-filter (filterChange)="onFilterChange($event)" class="search"></timeline-filter>
       </div>
     </ion-row>

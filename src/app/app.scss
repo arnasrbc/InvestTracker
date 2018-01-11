@@ -19,9 +19,31 @@
     background-color:  #11368C;
 }
 
+.logoIcon{
+    margin: 0 auto;
+}
+
+
 .logoIcon img{
-    height: 30px;
-    display: block;
-    margin-left: auto;
-    
+    height: 25px;
+    margin-top: 5px;
+}
+
+.filter-logo-wrapper{
+    position: absolute;
+    right: 5px;
+}
+
+.toolbar-md{
+    min-height: 42px;
+}
+
+.tabsBar .tab-button-icon{
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.tab-button-icon + .tab-button-text{
+    color: white;
 }
