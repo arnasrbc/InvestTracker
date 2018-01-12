@@ -13,9 +13,11 @@ import {Observable} from 'rxjs/Rx';
 export class FirebaseProvider {
 
   alertCollectionRef: AngularFirestoreCollection<any>;
+  readAlertCollectionRef: AngularFirestoreCollection<any>;
 
   constructor(public db: AngularFirestore) {
     this.alertCollectionRef = db.collection('alerts', ref => ref.orderBy('timestamp', 'asc'));
+    this.readAlertCollectionRef = db.collection('read-alerts');
   }
 
   alert$() {
@@ -41,5 +43,16 @@ export class FirebaseProvider {
           firstLoad: load
         }
       });
+  }
+
+  setLastReadAlertId(alertId) {
+    this.readAlertCollectionRef.doc("sabonis").set({
+      userId: "sabonis",
+      id: alertId
+    });
+  }
+
+  getLastReadAlertId() {
+    return this.readAlertCollectionRef.doc("sabonis");
   }
 }
