@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, SimpleChanges} from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import {FirebaseProvider} from "../../providers/firebase/firebase";
 
@@ -8,6 +8,7 @@ import {Subscription} from "rxjs/Subscription";
 import {TimelineFilter} from "../../models/timeline-filter";
 import {AngularFirestoreCollection, DocumentChangeAction} from "angularfire2/firestore";
 import {Observable} from "rxjs/Rx";
+import {Subject} from "rxjs/Subject";
 
 @Component({
   selector: 'page-timeline',
@@ -15,20 +16,22 @@ import {Observable} from "rxjs/Rx";
 })
 export class HomePage {
   items: IAlertWithIcon[] = [];
+  newItems: IAlertWithIcon[] = [];
   filters: any;
   subscription: Subscription;
-  alertsPerPage: number = 10;
-  lastIndexAlertPerpage: number =0;
-  displayItems: IAlertWithIcon[] = [];
   alertCollectionRef : AngularFirestoreCollection<any>;
-  private firstLoad = true;
+  newAlertCollectionRef: AngularFirestoreCollection<any>; //create a query with a where timestamp >= now
+  infiniteCompleted: Subject<any> = new Subject()
+
+  //TODO: Subscribe to new Alert collection and put in newItems
+  //TODO: Add an infinite-scroll up to populate items from newItems (unshifting)
 
   private lastDoc : any;
   constructor(public navCtrl: NavController, public firebaseProvider: FirebaseProvider, public navParams: NavParams) {
   }
 
   ngOnInit() {
-    this.alertCollectionRef = this.firebaseProvider.getCollection('alerts','timestamp','desc',50);
+    this.alertCollectionRef = this.firebaseProvider.getCollection('alerts','timestamp','desc',20);
     this.refreshSubscription();
   }
 
@@ -55,59 +58,39 @@ export class HomePage {
   }
 
   populateDisplayItems(){
-    let endIndex = (this.alertsPerPage + this.lastIndexAlertPerpage);
-    if(this.items && this.items.length >= endIndex){
-      this.displayItems.push(...this.items.slice(this.lastIndexAlertPerpage, endIndex));
-      this.lastIndexAlertPerpage = this.displayItems.length;
-    } else {
-      this.alertCollectionRef = this.firebaseProvider.getCollection('alerts','timestamp','desc',50, this.lastDoc);
+      this.alertCollectionRef = this.firebaseProvider.getCollection('alerts','timestamp','desc',20, this.lastDoc);
       if (this.subscription) { this.subscription.unsubscribe(); }
-      this.subscription = this.listenAlertStream();
-    }
+      this.subscription = this.listenAlertStream(this.alertCollectionRef);
   }
 
-  listenAlertStream(filter?: TimelineFilter): Subscription {
-    return this.alert$()
+  listenAlertStream(collection: AngularFirestoreCollection<any>, filter?: TimelineFilter): Subscription {
+    let lastFetch = 0;
+    return this.alert$(collection)
      // .filter((alert: IAlert) =>  !filter.entityId || alert.entityId === filter.entityId)
      // .filter((alert: IAlert) =>  !filter.entityCategories || filter.entityCategories.some( t => t === alert.entityCategory))
      // .filter((alert: IAlert) =>  !filter.eventCategories || filter.eventCategories.some( t => t === alert.eventCategory))
      // .filter( (alert: IAlert) => !filter.searchInput || this.alertContains(alert, filter.searchInput))
-      .map(alert => {
-        return Object.assign({},
-          alert,
-          {
-            icon: this.defineIconByEventCategory(alert.eventCategory),
-            title: this.defineTitleByEventCategory(alert.eventCategory)
-          });
-      })
       .subscribe(
         (alertWithIcon: IAlertWithIcon) =>  {
-          this.items.unshift(alertWithIcon);
-
-          //If the Display Items is already loaded for the first time, we should add the new alert to the list
-          if(!alertWithIcon.firstLoad){
-            this.displayItems.unshift(alertWithIcon);
-          } else if( this.displayItems.length < this.alertsPerPage ) {
-            this.displayItems.unshift(alertWithIcon);
-            this.lastIndexAlertPerpage = this.displayItems.length;
+          this.items.push(alertWithIcon);
+          lastFetch++;
+          if (lastFetch > 20) {
+             this.infiniteCompleted.next('complete');
           }
         },
         error => console.error(error),
-        () => console.log('completed'));
+        () => {
+          console.log('completed');
+        });
   }
 
-  private alert$() {
-    return this.alertCollectionRef.stateChanges(['added'])
-      .flatMap(arr => {
-        let o = Observable.combineLatest(Observable.of(this.firstLoad), Observable.from(arr));
-        this.firstLoad = false;
-        return o;
-      })
-      .map( ([load, firebaseAlert]: [boolean, DocumentChangeAction]) => {
+  private alert$(collection: AngularFirestoreCollection<any>) {
+    return collection.stateChanges(['added'])
+      .map( ([firebaseAlert]: [DocumentChangeAction]) => {
         this.lastDoc = firebaseAlert.payload.doc;
-        return [load, firebaseAlert.payload.doc.data()]
+        return [firebaseAlert.payload.doc.data()]
       })
-      .map( ([load, firebaseAlert]: [boolean, any]) => {
+      .map( ([firebaseAlert]: [any]) => {
         return {
           id: firebaseAlert.id,
           entityName: firebaseAlert.entity_name,
@@ -116,7 +99,8 @@ export class HomePage {
           eventCategory: firebaseAlert.event_category,
           message: firebaseAlert.message,
           timestamp: firebaseAlert.timestamp,
-          firstLoad: load
+          icon: this.defineIconByEventCategory(firebaseAlert.event_category),
+          title: this.defineTitleByEventCategory(firebaseAlert.event_category)
         }
       });
   }
@@ -128,15 +112,7 @@ export class HomePage {
 
   refreshSubscription(filter?: TimelineFilter) {
     if (this.subscription) { this.subscription.unsubscribe(); }
-    this.displayItems = [];
-    this.lastIndexAlertPerpage = 0;
-    this.subscription = this.listenAlertStream(filter);
+    this.subscription = this.listenAlertStream(this.alertCollectionRef, filter);
   }
 
-  private alertContains(alert: IAlert, searchInput: string): boolean {
-    return Object.keys(alert)
-      .map(key => alert[key])
-      .reduce( (acc, cur) => acc + cur, "")
-      .indexOf(searchInput) > -1;
-  }
 }

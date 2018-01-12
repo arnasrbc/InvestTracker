@@ -12,5 +12,5 @@
 </ion-header>
 
 <ion-content padding class="timelineContent">
-  <timeline-body (doInfiniteScroll)="populateDisplayItems()" [items]="displayItems"></timeline-body>
+  <timeline-body (doInfiniteScroll)="populateDisplayItems()" [infiniteCompleted]="infiniteCompleted" [items]="items"></timeline-body>
 </ion-content>
