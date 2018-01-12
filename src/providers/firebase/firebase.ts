@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
 import {isUndefined} from "util";
+import {TimelineFilter} from "../../models/timeline-filter";
+import * as firebase from "firebase";
 
 /*
   Generated class for the FirebaseProvider provider.
@@ -16,14 +18,44 @@ export class FirebaseProvider {
 
   }
 
-  getCollection (path, orderField, direction, limit, start?) : AngularFirestoreCollection<any> {
-    return isUndefined(start) ? this.db.collection(path, ref => ref.orderBy(orderField, direction).limit(limit).where('timestamp', '<=', new Date())) :
-      this.db.collection(path, ref => ref.orderBy(orderField, direction).limit(limit).startAfter(start).where('timestamp', '<=', new Date()));
+  getCollection (path, orderField, direction, limit, filter: TimelineFilter, start?) : AngularFirestoreCollection<any> {
+    console.log("f",filter);
+    console.log("start", start);
+    return isUndefined(start) ? this.db.collection(path, ref => this.applyFilter(ref.orderBy(orderField, direction).limit(limit).where('timestamp', '<=', new Date()), filter)) :
+      this.db.collection(path, ref => this.applyFilter(ref.orderBy(orderField, direction).limit(limit).startAfter(start).where('timestamp', '<=', new Date()), filter));
   }
 
-  collectionAfterGivenTime(path, time: Date):  AngularFirestoreCollection<any> {
-    return this.db.collection(path,  ref => ref.orderBy('timestamp', 'asc')
-                                                               .where('timestamp', '>', time));
+  collectionAfterGivenTime(path, time: Date, filter?: TimelineFilter):  AngularFirestoreCollection<any> {
+    return this.db.collection(path,  ref => this.applyFilter(ref.orderBy('timestamp', 'asc')
+                                                               .where('timestamp', '>', time), filter));
+
+
+
   }
 
+  private applyFilter(query: firebase.firestore.Query, filter?: TimelineFilter) {
+    console.log("&", filter)
+    let q = query;
+
+    if (filter && filter.searchInput) {
+     //q = q.where();
+    }
+
+    if (filter && filter.entityId) {
+      console.log("entityId", filter.entityId)
+
+      q = q.where('entity_id', '==', filter.entityId);
+    }
+
+    if (filter && filter.entityCategories) {
+      //q = q.where().;
+    }
+
+    if (filter && filter.eventCategories) {
+      //q = q.where();
+    }
+    console.log(filter);
+
+    return q;
+  }
 }
