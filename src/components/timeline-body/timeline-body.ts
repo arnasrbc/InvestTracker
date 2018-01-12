@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {IAlertWithIcon} from '../../models/alert.interface';
 import {PopoverController} from 'ionic-angular';
 import {Entity} from "../../models/entity";
+import {FirebaseProvider} from "../../providers/firebase/firebase";
 
 @Component({
   selector: 'timeline-body',
@@ -20,7 +21,7 @@ export class TimelineBodyComponent {
 
   @Input('items') items : IAlertWithIcon[];
   @Input('entity') entity : Entity;
-  constructor(public popoverCtrl: PopoverController) {
+  constructor(public popoverCtrl: PopoverController, public firebaseProvider: FirebaseProvider) {
     this.scrollDown = new EventEmitter<void>();
     this.scrollUp = new EventEmitter<void>();
   }
@@ -28,6 +29,7 @@ export class TimelineBodyComponent {
   doInfiniteDown(infiniteScrollDown) {
     this.infiniteScrollDown = infiniteScrollDown;
     this.scrollDown.emit();
+    this.firebaseProvider.setLastReadAlertId(this.items[this.items.length-1]);
   }
 
   doRefreshUp(refreshUp) {
