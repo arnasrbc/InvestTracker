@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { IAlertWithIcon } from '../../models/alert.interface';
+import { Entity } from '../../models/entity';
 import { PopoverController} from 'ionic-angular';
 
 @Component({
@@ -11,6 +12,7 @@ export class TimelineBodyComponent {
   doInfiniteScroll: EventEmitter<void>;
 
   @Input('items') items : IAlertWithIcon[];
+  @Input('entity') entity : Entity;
   constructor(public popoverCtrl: PopoverController) {
     this.doInfiniteScroll = new EventEmitter<void>();
   }

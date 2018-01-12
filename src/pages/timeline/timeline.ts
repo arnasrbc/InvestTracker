@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import {FirebaseProvider} from "../../providers/firebase/firebase";
-
+import {Entity} from '../../models/entity';
 import {EVENT_CATEGORIES} from '../../models/event-category';
 import {IAlert, IAlertWithIcon} from '../../models/alert.interface';
 import {Subscription} from "rxjs/Subscription";
@@ -18,6 +18,7 @@ export class HomePage {
   alertsPerPage: number = 10;
   lastIndexAlertPerpage: number =0;
   displayItems: IAlertWithIcon[] = [];
+  selectedEntity : Entity;
 
   constructor(public navCtrl: NavController, public firebaseProvider: FirebaseProvider, public navParams: NavParams) {
   }
@@ -41,7 +42,11 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    this.refreshSubscription(Object.assign({}, this.filters, { entityId: this.navParams.data.entityId}));
+    const entity = this.navParams.data.entity;
+    if (entity) {
+      this.refreshSubscription(Object.assign({}, this.filters, { entityId: entity}));
+      this.selectedEntity = entity;
+    }
   }
 
   populateDisplayItems(){

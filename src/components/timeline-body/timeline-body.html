@@ -1,3 +1,5 @@
+<ion-label *ngIf="items.length === 0 && entity" class="total-label text-align-center">No alerts available for #{{entity.entityCategory}} '{{entity.entityName}}'
+</ion-label>
 <ion-card *ngFor="let item of items" (click)="toggleDetails(item)">
     <ion-item class="timelineItem">
           <ion-avatar item-start class="timelineAvatar" align-self-center>

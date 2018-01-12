@@ -27,8 +27,8 @@ export class AboutPage {
     this.listenForInputChange();
   }
 
-  onClick(entityId) {
-    this.navCtrl.push(HomePage, {entityId: entityId});
+  onClick(entity) {
+    this.navCtrl.push(HomePage, {entity: entity});
   }
 
   onInput(event) {

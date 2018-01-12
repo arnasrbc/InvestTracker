@@ -49,7 +49,7 @@
     <button
       ion-item
       *ngFor="let entity of entities"
-      (click)="onClick(entity.entityId)">
+      (click)="onClick(entity)">
       <h2>{{ entity.entityName | uppercase }}</h2>
       <p>#{{ entity.entityCategory }}</p>
     </button>
