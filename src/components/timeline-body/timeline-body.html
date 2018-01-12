@@ -1,21 +1,33 @@
-<ion-card *ngFor="let item of items" (click)="toggleDetails(item)">
+<ion-content>
+
+  <ion-refresher (ionRefresh)="doRefreshUp($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      pullingText="Pull to refresh"
+      refreshingSpinner="dots"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <ion-card *ngFor="let item of items" (click)="toggleDetails(item)">
     <ion-item class="timelineItem">
-          <ion-avatar item-start class="timelineAvatar">
-              <ion-icon name="{{item.icon}}" id="timelineIcon"></ion-icon>
-          </ion-avatar>
-          <h2>{{item.title}} ({{item.entityId}})</h2>
-          <h3>{{item.entityName}}</h3>
-          <p>#{{item.entityCategory}} - On {{item.timestamp | date: "dd/MM/yyyy"}} at {{item.timestamp | date: "hh:mm"}}</p>
+      <ion-avatar item-start class="timelineAvatar">
+        <ion-icon name="{{item.icon}}" id="timelineIcon"></ion-icon>
+      </ion-avatar>
+      <h2>{{item.title}} ({{item.entityId}})</h2>
+      <h3>{{item.entityName}}</h3>
+      <p>#{{item.entityCategory}} - On {{item.timestamp | date: "dd/MM/yyyy"}} at {{item.timestamp | date: "hh:mm"}}</p>
     </ion-item>
 
     <ion-card-content *ngIf="item.showDetails">
-        <p class="timelineMessage">{{item.message}}</p>
+      <p class="timelineMessage">{{item.message}}</p>
     </ion-card-content>
-</ion-card>
+  </ion-card>
 
-<ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+  <ion-infinite-scroll position="bottom" (ionInfinite)="doInfiniteDown($event)" *ngIf="items.length > 0">
     <ion-infinite-scroll-content
       loadingSpinner="dots"
       loadingText="">
     </ion-infinite-scroll-content>
-</ion-infinite-scroll>
+  </ion-infinite-scroll>
+</ion-content>

@@ -21,7 +21,7 @@ export class FirebaseProvider {
       this.db.collection(path, ref => ref.orderBy(orderField, direction).limit(limit).startAfter(start).where('timestamp', '<=', new Date()));
   }
 
-  collectionAfterGivenTime(path, time: Date) {
+  collectionAfterGivenTime(path, time: Date):  AngularFirestoreCollection<any> {
     return this.db.collection(path,  ref => ref.orderBy('timestamp', 'asc')
                                                                .where('timestamp', '>', time));
   }

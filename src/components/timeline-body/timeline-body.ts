@@ -8,25 +8,45 @@ import {PopoverController} from 'ionic-angular';
 })
 export class TimelineBodyComponent {
 
-  private infiniteScroll;
+  private infiniteScrollDown;
+  private refreshUp;
 
   @Output()
-  doInfiniteScroll: EventEmitter<void>;
+  scrollDown: EventEmitter<void>;
 
-  @Input('items') items : IAlertWithIcon[];4
+  @Output()
+  scrollUp: EventEmitter<void>;
+
+  @Input('items') items : IAlertWithIcon[];
+
+  @Input()
+  numberOfNewItems: number;
 
   constructor(public popoverCtrl: PopoverController) {
-    this.doInfiniteScroll = new EventEmitter<void>();
+    this.scrollDown = new EventEmitter<void>();
+    this.scrollUp = new EventEmitter<void>();
   }
 
-  doInfinite(infiniteScroll) {
-    this.infiniteScroll = infiniteScroll;
-    this.doInfiniteScroll.emit();
+  doInfiniteDown(infiniteScrollDown) {
+    this.infiniteScrollDown = infiniteScrollDown;
+    this.scrollDown.emit();
   }
 
-  finish() {
-    if (this.infiniteScroll) {
-      this.infiniteScroll.complete();
+  doRefreshUp(refreshUp) {
+    this.refreshUp = refreshUp;
+    this.scrollUp.emit();
+  }
+
+  finishScrollDown() {
+    if (this.infiniteScrollDown) {
+      this.infiniteScrollDown.complete();
+    }
+  }
+
+  finishScrollUp() {
+    console.log('finish scroll up');
+    if (this.refreshUp) {
+      this.refreshUp.complete();
     }
   }
 
