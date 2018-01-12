@@ -1,6 +1,6 @@
 .timelineAvatar{
-  min-width: 37px !important;
-  margin-right: 5px !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
 }
 
 .timelineAvatar #timelineIcon {
@@ -13,22 +13,19 @@
 }
 
 .timelineContent h2{
-  font-size: 1.2rem !important;
+  font-size: 1.3rem !important;
   margin-top: 0px !important;
   font-weight: bold;
-  color: #11368C;
 }
 
 .timelineContent h3{
-  font-size: 1.1rem !important;
+  font-size: 1.2rem !important;
   margin-top: 0px !important;
-  font-style: italic;
 }
 
 .timelineItem p{
   color: #666;
-  font-size: 1.0rem;
-  font-style: italic;
+  font-size: 1.1rem;
 }
 
 // .timelineContent:before {
@@ -52,5 +49,9 @@
 }
 
 .timelineContent .timelineMessage{
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+}
+
+.timelineContent .scroll-content{
+  margin-bottom: 0 !important;
 }

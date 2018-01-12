@@ -2,10 +2,7 @@
 
   <ion-refresher (ionRefresh)="doRefreshUp($event)">
     <ion-refresher-content
-      pullingIcon="arrow-dropdown"
-      pullingText="Pull to refresh"
-      refreshingSpinner="dots"
-      refreshingText="Refreshing...">
+      refreshingSpinner="circles">
     </ion-refresher-content>
   </ion-refresher>
 
@@ -23,7 +20,7 @@
               <ion-icon name="{{item.icon}}" id="timelineIcon"></ion-icon>
           </ion-avatar>
           <h3>{{item.title}} ({{item.entityId}})</h3>
-          <h4>{{item.entityName}}</h4>
+          <h2>{{item.entityName}}</h2>
           <p>#{{item.entityCategory}} - On {{item.timestamp | date: "dd/MM/yyyy"}} at {{item.timestamp | date: "hh:mm"}}</p>
     </ion-item>
 
@@ -35,8 +32,7 @@
   <ion-infinite-scroll position="bottom"
                        (ionInfinite)="doInfiniteDown($event)" *ngIf="items.length > 0">
     <ion-infinite-scroll-content
-      loadingSpinner="dots"
-      loadingText="">
+      loadingSpinner="circles">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
 </ion-content>
