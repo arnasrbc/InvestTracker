@@ -1,11 +1,13 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import {FirebaseProvider} from "../../providers/firebase/firebase";
 import {Entity} from '../../models/entity';
 import {EVENT_CATEGORIES} from '../../models/event-category';
-import {IAlert, IAlertWithIcon} from '../../models/alert.interface';
+import {IAlertWithIcon} from '../../models/alert.interface';
 import {Subscription} from "rxjs/Subscription";
 import {TimelineFilter} from "../../models/timeline-filter";
+import {Observable} from "rxjs/Observable";
+import {TimelineBodyComponent} from "../../components/timeline-body/timeline-body";
 
 @Component({
   selector: 'page-timeline',
@@ -13,79 +15,74 @@ import {TimelineFilter} from "../../models/timeline-filter";
 })
 export class HomePage {
   items: IAlertWithIcon[] = [];
+  newItems: IAlertWithIcon[] = [];
   filters: any;
   subscription: Subscription;
-  alertsPerPage: number = 10;
-  lastIndexAlertPerpage: number =0;
-  displayItems: IAlertWithIcon[] = [];
   selectedEntity : Entity;
+  @ViewChild(TimelineBodyComponent)
+  timeLineBody: TimelineBodyComponent;
+
+  @Output()
+  updateNumberOfNewItems: EventEmitter<number>;
+
+  private lastDoc: any;
 
   constructor(public navCtrl: NavController, public firebaseProvider: FirebaseProvider, public navParams: NavParams) {
+    this.updateNumberOfNewItems = new EventEmitter<number>();
   }
 
-  defineIconByEventCategory(eventCategory : string){
+  defineIconByEventCategory(eventCategory: string) {
 
     const event = EVENT_CATEGORIES.find(i => i.code == eventCategory);
-    if (event)
-    {
+    if (event) {
       return event.icon;
     }
   }
 
-  defineTitleByEventCategory(eventCategory : string){
+  defineTitleByEventCategory(eventCategory: string) {
 
     const event = EVENT_CATEGORIES.find(i => i.code == eventCategory);
-    if (event)
-    {
+    if (event) {
       return event.label;
     }
   }
 
   ionViewDidLoad() {
-    const entity = this.navParams.data.entity;
-    if (entity) {
-      this.refreshSubscription(Object.assign({}, this.filters, { entityId: entity}));
-      this.selectedEntity = entity;
-    }
+    this.selectedEntity = this.navParams.data.entity;
+    const entityId = this.selectedEntity ? this.selectedEntity.entityId : undefined;
+    const filter = Object.assign({}, this.filters, { entityId: entityId});
+    this.singleTimeElementLoad(20, filter);
+    this.refreshSubscription(filter);
   }
 
-  populateDisplayItems(){
-    let endIndex = (this.alertsPerPage + this.lastIndexAlertPerpage);
-    if(this.items && this.items.length >= endIndex){
-      this.displayItems.push(...this.items.slice(this.lastIndexAlertPerpage, endIndex));
-      this.lastIndexAlertPerpage = this.displayItems.length;
-    }
+  infiniteScrollDown() {
+    const entityId = this.selectedEntity ? this.selectedEntity.entityId : undefined;
+    this.singleTimeElementLoad(20, Object.assign({}, this.filters, { entityId: entityId}),  this.lastDoc);
+  }
+
+  refreshScrollUp() {
+    this.items.unshift( ...this.newItems.splice(0, Math.max(20, this.newItems.length - 1))  );
+    this.updateNumberOfNewItems.emit(this.newItems.length);
+    setTimeout( () => {
+      this.timeLineBody.finishScrollUp();
+    }, 1000);
+    console.log('items', this.items);
   }
 
   listenAlertStream(filter?: TimelineFilter): Subscription {
-    this.items = [];
-    return this.firebaseProvider.alert$()
-      .filter((alert: IAlert) =>  !filter.entityId || alert.entityId === filter.entityId)
-      .filter((alert: IAlert) =>  !filter.entityCategories || filter.entityCategories.some( t => t === alert.entityCategory))
-      .filter((alert: IAlert) =>  !filter.eventCategories || filter.eventCategories.some( t => t === alert.eventCategory))
-      .filter( (alert: IAlert) => !filter.searchInput || this.alertContains(alert, filter.searchInput))
-      .map(alert => {
-        return Object.assign({},
-          alert,
-          {
-            icon: this.defineIconByEventCategory(alert.eventCategory),
-            title: this.defineTitleByEventCategory(alert.eventCategory)
-          });
-      })
+    return this.firebaseProvider.collectionAfterGivenTime('alerts', new Date(), filter)
+      .stateChanges(['added'])
+      .flatMap(arr => Observable.from(arr))
+      .map( fireAlert => this.firebaseToIAlertWithIcon(fireAlert.payload.doc.data()))
       .subscribe(
-        (alertWithIcon: IAlertWithIcon) =>  {
-          this.items.unshift(alertWithIcon);
-
-          //If the Display Items is already loaded for the first time, we should add the new alert to the list
-          if(!alertWithIcon.firstLoad){
-            this.displayItems.unshift(alertWithIcon);
-          } else if( this.displayItems.length < this.alertsPerPage ) {
-            this.displayItems.unshift(alertWithIcon);
-            this.lastIndexAlertPerpage = this.displayItems.length;
-          }
+        (alertWithIcon: IAlertWithIcon) => {
+          this.newItems.unshift(alertWithIcon);
+          console.log(this.newItems);
+          this.updateNumberOfNewItems.emit(this.newItems.length);
         },
-        error => console.error(error),
-        () => console.log('completed'));
+            error => console.error(error),
+            () => console.log('completed')
+        );
   }
 
   onFilterChange($event: any) {
@@ -93,17 +90,44 @@ export class HomePage {
     this.refreshSubscription(Object.assign({}, $event));
   }
 
-  refreshSubscription(filter: TimelineFilter) {
-    if (this.subscription) { this.subscription.unsubscribe(); }
-    this.displayItems = [];
-    this.lastIndexAlertPerpage = 0;
+  refreshSubscription(filter?: TimelineFilter) {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
     this.subscription = this.listenAlertStream(filter);
   }
 
-  private alertContains(alert: IAlert, searchInput: string): boolean {
-    return Object.keys(alert)
-      .map(key => alert[key])
-      .reduce( (acc, cur) => acc + cur, "")
-      .indexOf(searchInput) > -1;
+  private singleTimeElementLoad(numberOfElements: number, filter?: TimelineFilter, startDoc?: any) {
+    this.firebaseProvider.getCollection('alerts', 'timestamp', 'desc', numberOfElements, filter, startDoc)
+      .stateChanges().first()
+      .flatMap(arr => Observable.from(arr))
+      .map( doc => this.saveLastDocumentAndExtractDataFromFirebaseDoc(doc))
+      .map( fireAlert => this.firebaseToIAlertWithIcon(fireAlert))
+      .reduce((acc: any[], i) => acc.concat(i), [])
+      .toPromise()
+      .then((alerts: IAlertWithIcon[]) => {
+          this.timeLineBody.finishScrollDown();
+          this.items.push(...alerts);
+        }, console.log)
+      .catch(console.log);
+  }
+
+  private saveLastDocumentAndExtractDataFromFirebaseDoc(doc) {
+    this.lastDoc = doc.payload.doc;
+    return doc.payload.doc.data()
+  }
+
+  private firebaseToIAlertWithIcon(firebaseAlert: any) {
+      return {
+        id: firebaseAlert.id,
+        entityName: firebaseAlert.entity_name,
+        entityCategory: firebaseAlert.entity_category,
+        entityId: firebaseAlert.entity_id,
+        eventCategory: firebaseAlert.event_category,
+        message: firebaseAlert.message,
+        timestamp: firebaseAlert.timestamp,
+        icon: this.defineIconByEventCategory(firebaseAlert.event_category),
+        title: this.defineTitleByEventCategory(firebaseAlert.event_category)
+      };
   }
 }

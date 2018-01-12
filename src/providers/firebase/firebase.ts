@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
-import {AngularFirestore, AngularFirestoreCollection, DocumentChangeAction} from 'angularfire2/firestore';
-import {Observable} from 'rxjs/Rx';
+import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
+import {isUndefined} from "util";
+import {TimelineFilter} from "../../models/timeline-filter";
+import * as firebase from "firebase";
 
 /*
   Generated class for the FirebaseProvider provider.
@@ -20,29 +22,19 @@ export class FirebaseProvider {
     this.readAlertCollectionRef = db.collection('read-alerts');
   }
 
-  alert$() {
-    let firstLoad = true;
-    return this.alertCollectionRef.stateChanges(['added'])
-      .flatMap(arr => {
-        let o = Observable.combineLatest(Observable.of(firstLoad), Observable.from(arr));
-        firstLoad = false;
-        return o;
-      })
-      .map( ([load, firebaseAlert]: [boolean, DocumentChangeAction]) => {
-        return [load, firebaseAlert.payload.doc.data()]
-      })
-      .map( ([load, firebaseAlert]: [boolean, any]) => {
-        return {
-          id: firebaseAlert.id,
-          entityName: firebaseAlert.entity_name,
-          entityCategory: firebaseAlert.entity_category,
-          entityId: firebaseAlert.entity_id,
-          eventCategory: firebaseAlert.event_category,
-          message: firebaseAlert.message,
-          timestamp: firebaseAlert.timestamp,
-          firstLoad: load
-        }
-      });
+  getCollection (path, orderField, direction, limit, filter: TimelineFilter, start?) : AngularFirestoreCollection<any> {
+    console.log("f",filter);
+    console.log("start", start);
+    return isUndefined(start) ? this.db.collection(path, ref => this.applyFilter(ref.orderBy(orderField, direction).limit(limit).where('timestamp', '<=', new Date()), filter)) :
+      this.db.collection(path, ref => this.applyFilter(ref.orderBy(orderField, direction).limit(limit).startAfter(start).where('timestamp', '<=', new Date()), filter));
+  }
+
+  collectionAfterGivenTime(path, time: Date, filter?: TimelineFilter):  AngularFirestoreCollection<any> {
+    return this.db.collection(path,  ref => this.applyFilter(ref.orderBy('timestamp', 'asc')
+                                                               .where('timestamp', '>', time), filter));
+
+
+
   }
 
   setLastReadAlertId(alertId) {
@@ -54,5 +46,31 @@ export class FirebaseProvider {
 
   getLastReadAlertId() {
     return this.readAlertCollectionRef.doc("sabonis");
+  }
+
+  private applyFilter(query: firebase.firestore.Query, filter?: TimelineFilter) {
+    console.log("&", filter)
+    let q = query;
+
+    if (filter && filter.searchInput) {
+     //q = q.where();
+    }
+
+    if (filter && filter.entityId) {
+      console.log("entityId", filter.entityId)
+
+      q = q.where('entity_id', '==', filter.entityId);
+    }
+
+    if (filter && filter.entityCategories) {
+      //q = q.where().;
+    }
+
+    if (filter && filter.eventCategories) {
+      //q = q.where();
+    }
+    console.log(filter);
+
+    return q;
   }
 }

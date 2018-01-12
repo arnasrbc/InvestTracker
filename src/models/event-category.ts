@@ -62,7 +62,7 @@ export const EVENT_CATEGORIES: EventCategroy[] = [
     },
     {
         icon: 'trending-down',
-        label: 'Minimal trade',
+        label: 'Below minimal trade',
         code: 'low_trade_amount'
     }
 
