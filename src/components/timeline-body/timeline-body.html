@@ -14,14 +14,18 @@
   <ion-card *ngFor="let item of items"
             (click)="toggleDetails(item)">
     <ion-item class="timelineItem">
+        <div class="cardAvatar">
           <ion-avatar item-start
                       class="timelineAvatar"
                       align-self-center>
               <ion-icon name="{{item.icon}}" id="timelineIcon"></ion-icon>
           </ion-avatar>
+        </div>
+        <div class="cardText">
           <h3>{{item.title}} ({{item.entityId}})</h3>
           <h2>{{item.entityName}}</h2>
           <p>#{{item.entityCategory}} - On {{item.timestamp | date: "dd/MM/yyyy"}} at {{item.timestamp | date: "hh:mm"}}</p>
+        </div>
     </ion-item>
 
     <ion-card-content *ngIf="item.showDetails">
