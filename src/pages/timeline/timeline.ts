@@ -48,13 +48,16 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    this.singleTimeElementLoad(20);
-    this.refreshSubscription(Object.assign({}, this.filters, { entityId: this.navParams.data.entityId}));
     this.selectedEntity = this.navParams.data.entity;
+    const entityId = this.selectedEntity ? this.selectedEntity.entityId : undefined;
+    const filter = Object.assign({}, this.filters, { entityId: entityId});
+    this.singleTimeElementLoad(20, filter);
+    this.refreshSubscription(filter);
   }
 
   infiniteScrollDown() {
-    this.singleTimeElementLoad(20, this.lastDoc);
+    const entityId = this.selectedEntity ? this.selectedEntity.entityId : undefined;
+    this.singleTimeElementLoad(20, Object.assign({}, this.filters, { entityId: entityId}),  this.lastDoc);
   }
 
   refreshScrollUp() {
@@ -67,7 +70,7 @@ export class HomePage {
   }
 
   listenAlertStream(filter?: TimelineFilter): Subscription {
-    return this.firebaseProvider.collectionAfterGivenTime('alerts', new Date())
+    return this.firebaseProvider.collectionAfterGivenTime('alerts', new Date(), filter)
       .stateChanges(['added'])
       .flatMap(arr => Observable.from(arr))
       .map( fireAlert => this.firebaseToIAlertWithIcon(fireAlert.payload.doc.data()))
@@ -94,8 +97,8 @@ export class HomePage {
     this.subscription = this.listenAlertStream(filter);
   }
 
-  private singleTimeElementLoad(numberOfElements: number, startDoc?: any) {
-    this.firebaseProvider.getCollection('alerts', 'timestamp', 'desc', numberOfElements, startDoc)
+  private singleTimeElementLoad(numberOfElements: number, filter?: TimelineFilter, startDoc?: any) {
+    this.firebaseProvider.getCollection('alerts', 'timestamp', 'desc', numberOfElements, filter, startDoc)
       .stateChanges().first()
       .flatMap(arr => Observable.from(arr))
       .map( doc => this.saveLastDocumentAndExtractDataFromFirebaseDoc(doc))
