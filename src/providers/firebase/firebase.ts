@@ -73,4 +73,15 @@ export class FirebaseProvider {
 
     return q;
   }
+
+  setLastReadAlertId(alertId) {
+    this.readAlertCollectionRef.doc("sabonis").set({
+      userId: "sabonis",
+      id: alertId
+    });
+  }
+
+  getLastReadAlertId() {
+    return this.readAlertCollectionRef.doc("sabonis");
+  }
 }
