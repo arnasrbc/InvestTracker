@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
-import {AngularFirestore, AngularFirestoreCollection, DocumentChangeAction} from 'angularfire2/firestore';
+import {AngularFirestore, AngularFirestoreCollection} from 'angularfire2/firestore';
 import {isUndefined} from "util";
+
 /*
   Generated class for the FirebaseProvider provider.
 
@@ -16,7 +17,6 @@ export class FirebaseProvider {
   }
 
   getCollection (path, orderField, direction, limit, start?) : AngularFirestoreCollection<any> {
-    console.log(start);
     return isUndefined(start) ? this.db.collection(path, ref => ref.orderBy(orderField, direction).limit(limit)) :
       this.db.collection(path, ref => ref.orderBy(orderField, direction).limit(limit).startAfter(start));
   }

@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import { IAlertWithIcon } from '../../models/alert.interface';
-import { PopoverController} from 'ionic-angular';
-import {Subject} from "rxjs/Subject";
+import {IAlertWithIcon} from '../../models/alert.interface';
+import {PopoverController} from 'ionic-angular';
 
 @Component({
   selector: 'timeline-body',
@@ -14,27 +13,21 @@ export class TimelineBodyComponent {
   @Output()
   doInfiniteScroll: EventEmitter<void>;
 
-  @Input()
-  infiniteCompleted: Subject<any>;
+  @Input('items') items : IAlertWithIcon[];4
 
-  @Input('items') items : IAlertWithIcon[];
   constructor(public popoverCtrl: PopoverController) {
     this.doInfiniteScroll = new EventEmitter<void>();
   }
 
-  ngOnInit() {
-    this.infiniteCompleted.subscribe(event => {
-      if (this.infiniteScroll) {
-        this.infiniteScroll.complete();
-      }
-    });
+  doInfinite(infiniteScroll) {
+    this.infiniteScroll = infiniteScroll;
+    this.doInfiniteScroll.emit();
   }
 
-  doInfinite(infiniteScroll) {
-    console.log('Begin async operation');
-    this.infiniteScroll = infiniteScroll;
-
-    this.doInfiniteScroll.emit();
+  finish() {
+    if (this.infiniteScroll) {
+      this.infiniteScroll.complete();
+    }
   }
 
   toggleDetails(item) {
