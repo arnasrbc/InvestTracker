@@ -5,13 +5,20 @@
           <img src="assets/imgs/White-logo-triangle-IT.png">
       </div>
       <div class="filter-logo-wrapper">
-        <timeline-filter (filterChange)="onFilterChange($event)" class="search"></timeline-filter>
+        <timeline-filter (filterChange)="onFilterChange($event)"
+                         class="search">
+        </timeline-filter>
       </div>
     </ion-row>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding class="timelineContent">
-  <timeline-body (doInfiniteScroll)="populateDisplayItems()" [items]="displayItems" [entity]="selectedEntity"></timeline-body>
+  <timeline-body (scrollDown)="infiniteScrollDown()"
+                 (scrollUp)="refreshScrollUp()"
+                 [items]="items"
+                 [numberOfNewItems]="newItems.length"
+                 [entity]="selectedEntity">
+  </timeline-body>
 </ion-content>
 

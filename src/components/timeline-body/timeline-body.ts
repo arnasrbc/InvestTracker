@@ -1,31 +1,51 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import { IAlertWithIcon } from '../../models/alert.interface';
-import { Entity } from '../../models/entity';
-import { PopoverController} from 'ionic-angular';
+import {IAlertWithIcon} from '../../models/alert.interface';
+import {PopoverController} from 'ionic-angular';
+import {Entity} from "../../models/entity";
 
 @Component({
   selector: 'timeline-body',
   templateUrl: 'timeline-body.html'
 })
 export class TimelineBodyComponent {
+
+  private infiniteScrollDown;
+  private refreshUp;
+
   @Output()
-  doInfiniteScroll: EventEmitter<void>;
+  scrollDown: EventEmitter<void>;
+
+  @Output()
+  scrollUp: EventEmitter<void>;
 
   @Input('items') items : IAlertWithIcon[];
   @Input('entity') entity : Entity;
   constructor(public popoverCtrl: PopoverController) {
-    this.doInfiniteScroll = new EventEmitter<void>();
+    this.scrollDown = new EventEmitter<void>();
+    this.scrollUp = new EventEmitter<void>();
   }
 
-  doInfinite(infiniteScroll) {
-    console.log('Begin async operation');
+  doInfiniteDown(infiniteScrollDown) {
+    this.infiniteScrollDown = infiniteScrollDown;
+    this.scrollDown.emit();
+  }
 
-    setTimeout(() => {
-      this.doInfiniteScroll.emit();
+  doRefreshUp(refreshUp) {
+    this.refreshUp = refreshUp;
+    this.scrollUp.emit();
+  }
 
-      console.log('Async operation has ended');
-      infiniteScroll.complete();
-    }, 500);
+  finishScrollDown() {
+    if (this.infiniteScrollDown) {
+      this.infiniteScrollDown.complete();
+    }
+  }
+
+  finishScrollUp() {
+    console.log('finish scroll up');
+    if (this.refreshUp) {
+      this.refreshUp.complete();
+    }
   }
 
   toggleDetails(item) {

@@ -6,7 +6,6 @@ export interface IAlert {
     eventCategory: string;
     message: string;
     timestamp: string;
-    firstLoad: boolean;
   }
 
 export interface IAlertWithIcon {
@@ -19,5 +18,4 @@ export interface IAlertWithIcon {
   message: string;
   timestamp: string;
   icon: string;
-  firstLoad: boolean;
 }
