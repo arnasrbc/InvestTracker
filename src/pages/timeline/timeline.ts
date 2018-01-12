@@ -19,15 +19,13 @@ export class HomePage {
   newItems: IAlertWithIcon[] = [];
   filters: any;
   subscription: Subscription;
-  alertCollectionRef: AngularFirestoreCollection<any>;
 
   @ViewChild(TimelineBodyComponent)
   timeLineBody: TimelineBodyComponent;
 
   private lastDoc: any;
 
-  constructor(public navCtrl: NavController, public firebaseProvider: FirebaseProvider, public navParams: NavParams) {
-  }
+  constructor(public navCtrl: NavController, public firebaseProvider: FirebaseProvider, public navParams: NavParams) {}
 
   defineIconByEventCategory(eventCategory: string) {
 
@@ -47,29 +45,27 @@ export class HomePage {
 
   ionViewDidLoad() {
     this.singleTimeElementLoad(20);
-    // todo this.refreshSubscription(Object.assign({}, this.filters, { entityId: this.navParams.data.entityId}));
+    this.refreshSubscription(Object.assign({}, this.filters, { entityId: this.navParams.data.entityId}));
   }
 
   infiniteScrollDown() {
     this.singleTimeElementLoad(20, this.lastDoc);
   }
 
-  // listenAlertStream(collection: AngularFirestoreCollection<any>, filter?: TimelineFilter): Subscription {
-  //   let lastFetch = 0;
-  //   return this.alert$(collection)
-  //     .subscribe(
-  //       (alertWithIcon: IAlertWithIcon) =>  {
-  //         this.items.push(alertWithIcon);
-  //         lastFetch++;
-  //         if (lastFetch > 20) {
-  //            this.infiniteCompleted.next('complete');
-  //         }
-  //       },
-  //       error => console.error(error),
-  //       () => {
-  //         console.log('completed');
-  //       });
-  // }
+  listenAlertStream(filter?: TimelineFilter): Subscription {
+    return this.firebaseProvider.collectionAfterGivenTime('alerts', new Date())
+      .stateChanges(['added'])
+      .flatMap(arr => Observable.from(arr))
+      .map( fireAlert => this.firebaseToIAlertWithIcon(fireAlert.payload.doc.data()))
+      .subscribe(
+        (alertWithIcon: IAlertWithIcon) => {
+          this.newItems.unshift(alertWithIcon);
+          console.log(this.newItems);
+        },
+            error => console.error(error),
+            () => console.log('completed')
+        );
+  }
 
   private alert$(collection: AngularFirestoreCollection<any>) {
     return collection.stateChanges(['added'])
@@ -103,7 +99,7 @@ export class HomePage {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-    //this.subscription = this.listenAlertStream(this.alertCollectionRef, filter);
+    this.subscription = this.listenAlertStream(filter);
   }
 
   private singleTimeElementLoad(numberOfElements: number, startDoc?: any) {
@@ -120,7 +116,6 @@ export class HomePage {
         }, console.log)
       .catch(console.log);
   }
-
 
   private saveLastDocumentAndExtractDataFromFirebaseDoc(doc) {
     this.lastDoc = doc.payload.doc;

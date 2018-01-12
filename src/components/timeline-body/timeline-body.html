@@ -7,7 +7,7 @@
           <h3>{{item.entityName}}</h3>
           <p>#{{item.entityCategory}} - On {{item.timestamp | date: "dd/MM/yyyy"}} at {{item.timestamp | date: "hh:mm"}}</p>
     </ion-item>
- 
+
     <ion-card-content *ngIf="item.showDetails">
         <p class="timelineMessage">{{item.message}}</p>
     </ion-card-content>
