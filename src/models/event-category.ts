@@ -6,27 +6,27 @@
 
 export const EVENT_CATEGORIES: EventCategroy[] = [
     {
-        icon: 'add-circle',
+        icon: 'add',
         label: 'New Share Class',
         code: 'new_share_class'
     },
     {
-        icon: 'add-circle',
-        label: 'New Legal Found',
+        icon: 'add',
+        label: 'New Legal Fund',
         code: 'new_legal_fund'
     },
     {
-        icon: 'add-circle',
+        icon: 'add',
         label: 'New Holding',
         code: 'new_holding'
     },
     {
-        icon: 'add-circle',
+        icon: 'add',
         label: 'New Dealer',
         code: 'new_dealer'
     },
     {
-        icon: 'add-circle',
+        icon: 'add',
         label: 'New Trade',
         code: 'new_trade'
     },
@@ -57,12 +57,12 @@ export const EVENT_CATEGORIES: EventCategroy[] = [
     },
     {
         icon: 'trending-up',
-        label: 'Trade amount over threshold',
+        label: 'Large trade',
         code: 'high_trade_amount'
     },
     {
         icon: 'trending-down',
-        label: 'Trade amount below threshold',
+        label: 'Minimal trade',
         code: 'low_trade_amount'
     }
 
