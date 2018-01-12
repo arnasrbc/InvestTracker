@@ -14,8 +14,12 @@ import * as firebase from "firebase";
 @Injectable()
 export class FirebaseProvider {
 
-  constructor(public db: AngularFirestore) {
+  alertCollectionRef: AngularFirestoreCollection<any>;
+  readAlertCollectionRef: AngularFirestoreCollection<any>;
 
+  constructor(public db: AngularFirestore) {
+    this.alertCollectionRef = db.collection('alerts', ref => ref.orderBy('timestamp', 'asc'));
+    this.readAlertCollectionRef = db.collection('read-alerts');
   }
 
   getCollection (path, orderField, direction, limit, filter: TimelineFilter, start?) : AngularFirestoreCollection<any> {
@@ -31,6 +35,17 @@ export class FirebaseProvider {
 
 
 
+  }
+
+  setLastReadAlertId(alertId) {
+    this.readAlertCollectionRef.doc("sabonis").set({
+      userId: "sabonis",
+      id: alertId
+    });
+  }
+
+  getLastReadAlertId() {
+    return this.readAlertCollectionRef.doc("sabonis");
   }
 
   private applyFilter(query: firebase.firestore.Query, filter?: TimelineFilter) {
@@ -57,5 +72,16 @@ export class FirebaseProvider {
     console.log(filter);
 
     return q;
+  }
+
+  setLastReadAlertId(alertId) {
+    this.readAlertCollectionRef.doc("sabonis").set({
+      userId: "sabonis",
+      id: alertId
+    });
+  }
+
+  getLastReadAlertId() {
+    return this.readAlertCollectionRef.doc("sabonis");
   }
 }
