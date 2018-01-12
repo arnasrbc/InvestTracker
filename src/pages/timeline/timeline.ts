@@ -25,6 +25,7 @@ export class HomePage {
 
   //TODO: Subscribe to new Alert collection and put in newItems
   //TODO: Add an infinite-scroll up to populate items from newItems (unshifting)
+  //TODO: Infinite commpleted needs a timeout or another way to deal with
 
   private lastDoc : any;
   constructor(public navCtrl: NavController, public firebaseProvider: FirebaseProvider, public navParams: NavParams) {
